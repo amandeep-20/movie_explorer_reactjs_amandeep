@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+__mocks__
+common
+moviesLayout
+User
+Admin
 
 # Editor directories and files
 .vscode/*
