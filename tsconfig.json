@@ -11,5 +11,5 @@
     "jsx": "react",
     "skipLibCheck": true,
   },
-  "include": ["src", "/setupTests.ts", "jest.config.ts"]
+  "include": ["src", "/setupTests.ts", "jest.config.ts", "config/MoviesData.tsx"]
 }

@@ -1,0 +1,10 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Yellow briefcase/bag -->
+  <g transform="translate(25, 30)">
+    <!-- Bag body -->
+    <rect x="0" y="10" width="50" height="35" rx="5" ry="5" fill="#FFD700" />
+    
+    <!-- Bag handle -->
+    <path d="M15 10 Q25 0 35 10" stroke="#FFD700" stroke-width="5" fill="none" />
+  </g>
+</svg>
