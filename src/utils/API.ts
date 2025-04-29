@@ -10,60 +10,44 @@ interface UserResponse {
   token: string;
 }
 
-// Interface for the request payload
 interface UserPayload {
   email: string;
   password: string;
 }
 
-// API function to handle user login and store data in local storage
-export const loginAPI = async (payload: UserPayload) => {
+export const loginAPI = async (payload: { email: string, password: string }) => {
   const { email, password } = payload;
 
   try {
-    const response: AxiosResponse<Omit<UserResponse, 'token'>> = await axios.post(
-      `${BASE_URL}/users/sign_in`,
-      {
-        user: { email, password },
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+      const response = await axios.post(`${BASE_URL}/users/sign_in`, { user: {email, password} },
+          {
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+              }
+          }
+      );
+      console.log("helooooooooooooooooooo",response.data);
+      const token =localStorage.setItem("token", response?.data?.token);
+      console.log(token);
+      localStorage.setItem("user", JSON.stringify(response?.data));
+      const userResponse : UserResponse ={
+        ...response.data,
       }
-    );
 
-    // Extract token from response headers
-    const token = response.headers['access-token'] || ''; 
-
-    // Construct the full UserResponse object
-    const userResponse: UserResponse = {
-      ...response.data,
-      token,
-    };
-
-    console.log('Response from API:', userResponse);
-    console.log('Response from API:', token);
-
-    // Store token and user data in local storage
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('userData', JSON.stringify(userResponse));
-
-    return { ...response, data: userResponse };
-  } catch (error) {
-    console.error('Error occurred while fetching user data:', error);
-    return undefined;
+      return userResponse;
   }
-};
+  catch (error) {
+      console.log("Error Occurred while Signing In: ", error);
+  }
+}
 
 
 export const signup = async (payload: { name: string, email: string, password: string, mobile_number: string }) => {
     const { name, email, password, mobile_number } = payload;
 
     try {
-        console.log('Payload sent to API:', { user: { name, email, password, mobile_number } });
-        const response = await axios.post(`${BASE_URL}/auth/sign_up`,{ user: { name, email, password, mobile_number } },
+        const response = await axios.post(`${BASE_URL}/users`,{ user: { name, email, password, mobile_number } },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -87,3 +71,78 @@ export const signup = async (payload: { name: string, email: string, password: s
         throw new Error(errorMessage);
     }
 };
+
+interface Movie {
+    id: number;
+    title: string;
+    genre: string;
+    release_year: number;
+    rating: number;
+    director: string;
+    duration: number;
+    description: string;
+    premium: boolean;
+    main_lead: string;
+    streaming_platform: string;
+    poster_url: string;
+    banner_url: string;
+  } 
+
+export const getAllMovies = async()=>{
+    try{
+        const response = await axios.get(`${BASE_URL}/api/v1/movies`,
+            {
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            const movies : Movie[] = response.data;
+            console.log("fetched movies", movies);
+
+            return movies;
+    }
+    catch(error : any){
+        console.log("error ", error.message);
+    }
+}
+
+
+export const getMoviesById = async (id: number) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/v1/movies/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+    const movie: Movie = response.data; 
+    console.log('Fetched movie by ID:', movie);
+    return movie;
+  } catch (error: any) {
+    console.error(`Error fetching movie with ID ${id}:`, error.message);
+    return null;
+  }
+};
+
+  
+
+export const getMoviesByGenre = async (genre: string): Promise<Movie[]> => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/v1/movies`, {
+        params: {
+          genre,  
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+      const movies: Movie[] = response.data.movies || [];
+      console.log(`Fetched movies for genre ${genre}:`, movies);
+      return movies;
+    } catch (error: any) {
+      console.error(`Error fetching movies for genre ${genre}:`, error.message);
+      return [];
+    }
+  };

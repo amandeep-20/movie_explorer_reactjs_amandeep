@@ -1,11 +1,24 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Typography, IconButton } from "@mui/material"; // Add IconButton
-import StarIcon from "@mui/icons-material/Star";
-import EditIcon from "@mui/icons-material/Edit"; // Import EditIcon
-import { Episode } from "../../../config/MoviesData";
-import primeLogo from "../../assets/images/prime.svg";
-import { useRole } from "../../context/RoleContext"; // Import useRole
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Typography, IconButton } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import EditIcon from '@mui/icons-material/Edit';
+import primeLogo from '../../assets/images/prime.svg';
+import { useRole } from '../../context/RoleContext';
+
+interface Episode {
+  id: number;
+  title: string;
+  image: string;
+  starRating: number;
+  year: number;
+  duration: string;
+  date: string;
+  desc: string;
+  director: string;
+  main_lead: string;
+  streaming_platform: string;
+}
 
 interface MovieItemProps {
   episode: Episode;
@@ -14,15 +27,14 @@ interface MovieItemProps {
 
 const MovieItem: React.FC<MovieItemProps> = ({ episode }) => {
   const navigate = useNavigate();
-  const { role } = useRole(); // Access role from context
-  const isAdmin = role === "admin"; // Check if user is admin
+  const { role } = useRole();
+  const isAdmin = role === 'admin'; // Corrected to check for "admin"
 
   const handleClick = () => {
     navigate(`/user/viewMovieDetail/${episode.id}`);
   };
 
   const handleEditClick = () => {
-    // Navigate to an edit page or trigger an edit action
     navigate(`/admin/editMovie/${episode.id}`);
   };
 
@@ -30,72 +42,70 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode }) => {
     <Box
       onClick={handleClick}
       sx={{
-        flex: "0 0 auto",
+        flex: '0 0 auto',
         width: { xs: 150, sm: 200 },
-        scrollSnapAlign: "start",
-        cursor: "pointer",
+        scrollSnapAlign: 'start',
+        cursor: 'pointer',
         mr: 2,
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        "@media (hover: hover)": {
-          "&:hover": {
-            transform: "translateY(-8px)",
-            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        '@media (hover: hover)': {
+          '&:hover': {
+            transform: 'translateY(-8px)',
+            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
           },
         },
       }}
     >
       <Box
         sx={{
-          position: "relative",
-          width: "100%",
+          position: 'relative',
+          width: '100%',
           height: { xs: 225, sm: 300, md: 350 },
-          overflow: "hidden",
-          borderRadius: "8px",
-          transition: "all 0.3s ease",
+          overflow: 'hidden',
+          borderRadius: '8px',
+          transition: 'all 0.3s ease',
         }}
       >
         <img
           src={episode.image}
           alt={episode.title}
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: "8px",
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            borderRadius: '8px',
           }}
           loading="lazy"
           width={200}
           height={300}
         />
-        {/* Prime Logo Overlay */}
         <Box
           component="img"
           src={primeLogo}
           alt="Prime Logo"
           sx={{
-            position: "absolute",
+            position: 'absolute',
             top: 8,
             left: 8,
             width: 40,
-            height: "auto",
+            height: 'auto',
             opacity: 0.9,
             zIndex: 1,
           }}
         />
-        {/* Edit Button for Admins */}
         {isAdmin && (
           <IconButton
             onClick={(e) => {
-              e.stopPropagation(); // Prevent triggering handleClick
+              e.stopPropagation();
               handleEditClick();
             }}
             sx={{
-              position: "absolute",
+              position: 'absolute',
               top: 8,
               right: 8,
-              bgcolor: "rgba(0, 0, 0, 0.5)",
-              color: "#fff",
-              "&:hover": { bgcolor: "rgba(0, 0, 0, 0.7)" },
+              bgcolor: 'rgba(0, 0, 0, 0.5)',
+              color: '#fff',
+              '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.7)' },
               zIndex: 1,
             }}
             aria-label={`Edit ${episode.title}`}
@@ -110,22 +120,22 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode }) => {
         mt={1}
         title={episode.title}
         sx={{
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          maxWidth: "100%",
-          transition: "color 0.3s ease",
-          "@media (hover: hover)": {
-            "&:hover": {
-              color: "#ffd700",
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          maxWidth: '100%',
+          transition: 'color 0.3s ease',
+          '@media (hover: hover)': {
+            '&:hover': {
+              color: '#ffd700',
             },
           },
         }}
       >
         {episode.title}
       </Typography>
-      <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
-        <StarIcon sx={{ color: "#f5c518", fontSize: 16, mr: 0.5 }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+        <StarIcon sx={{ color: '#f5c518', fontSize: 16, mr: 0.5 }} />
         <Typography variant="body2" color="gray">
           {episode.starRating}
         </Typography>
@@ -134,10 +144,10 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode }) => {
         variant="body2"
         color="gray"
         sx={{
-          transition: "color 0.3s ease",
-          "@media (hover: hover)": {
-            "&:hover": {
-              color: "#ccc",
+          transition: 'color 0.3s ease',
+          '@media (hover: hover)': {
+            '&:hover': {
+              color: '#ccc',
             },
           },
         }}
@@ -148,4 +158,4 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode }) => {
   );
 };
 
-export default React.memo(MovieItem);
+export default React.memo(MovieItem); 

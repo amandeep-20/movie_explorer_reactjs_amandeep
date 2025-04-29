@@ -2,10 +2,10 @@ import React from "react";
 import { Box, Button, Typography, Fade, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import EditIcon from "@mui/icons-material/Edit"; // Import EditIcon
+import EditIcon from "@mui/icons-material/Edit";
 import { Episode } from "../../../config/MoviesData";
 import WithNavigation from "../common/WithNavigation";
-import RoleContext from "../../context/RoleContext"; // Import RoleContext
+import RoleContext from "../../context/RoleContext";
 
 interface SliderItemProps {
   episode: Episode;
@@ -15,7 +15,6 @@ interface SliderItemProps {
 }
 
 class SliderItem extends React.Component<SliderItemProps> {
-  // Declare contextType to access RoleContext
   static contextType = RoleContext;
   declare context: React.ContextType<typeof RoleContext>;
 
@@ -27,7 +26,7 @@ class SliderItem extends React.Component<SliderItemProps> {
   };
 
   handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering handleClick
+    e.stopPropagation();
     const { navigate, episode } = this.props;
     if (navigate) {
       navigate(`/admin/editMovie/${episode.id}`);
@@ -36,7 +35,7 @@ class SliderItem extends React.Component<SliderItemProps> {
 
   render() {
     const { episode, isActive } = this.props;
-    const isAdmin = this.context.role === "admin"; // Check if user is admin
+    const isAdmin = this.context.role === "admin";
 
     return (
       <Box
@@ -58,7 +57,7 @@ class SliderItem extends React.Component<SliderItemProps> {
           sx={{
             position: "absolute",
             top: 0,
-            left: { xs: 0, sm: 0, md: "50%" },
+            left: 0, // Full width across all views
             width: "100%",
             height: "100%",
             zIndex: -1,
@@ -70,9 +69,10 @@ class SliderItem extends React.Component<SliderItemProps> {
             src={episode.image}
             alt={episode.title}
             sx={{
+              width: "100%", // Full width in all views
               height: "100%",
-              objectFit: "cover",
-              width: { xs: "100%", sm: "100%", md: "50%" },
+              objectFit: "cover", // Ensures image fills without distortion
+              objectPosition: "center", // Centers the image
             }}
           />
         </Box>

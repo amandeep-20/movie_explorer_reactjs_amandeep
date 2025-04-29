@@ -11,10 +11,27 @@ export interface Episode {
   year: number;
   starRating: number;
   desc: string;
-  director: string; // Added director field
-  main_lead: string; // Added main lead field
-  streaming_platform: string; // Added streaming platform field
+  director: string; 
+  main_lead: string; 
+  streaming_platform: string;
 }
+
+
+// {
+//   "id": 2,
+//   "title": "Inception",
+//   "genre": "Sci-Fi",
+//   "release_year": 2010,
+//   "rating": 8.8,
+//   "director": "Christopher Nolan",
+//   "duration": 148,
+//   "description": "\"Inception\" (2010), a sci-fi thriller directed by Christopher Nolan, stars Leonardo DiCaprio as a thief who infiltrates dreams to steal secrets. Tasked with planting an idea into a target's mind, he navigates a labyrinth of dreams within dreams, blending reality and illusion in a visually stunning, mind-bending narrative.",
+//   "premium": false,
+//   "main_lead": "Leonardo DiCaprio",
+//   "streaming_platform": "Netflix",
+//   "poster_url": "https://res.cloudinary.com/dobo7ctcb/image/upload/v1/rails_uploads/mdqpn8hxi1nbnx88m8bi9xl2i15h.jpeg?_a=BACAEuBn",
+//   "banner_url": "https://res.cloudinary.com/dobo7ctcb/image/upload/v1/rails_uploads/ayrxfrtdwe5d9hhhdrsvvlz8drsu.jpeg?_a=BACAEuBn"
+// },
 
 export const topRated: Episode[] = [
   {

@@ -9,7 +9,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AuthLayout from '../../components/layouts/AuthLayout';
-import { loginAPI, signup } from '../../utils/API';
+import { getAllMovies, signup } from '../../utils/API';
 import WithNavigation from '../common/WithNavigation';
 
 interface Errors {
@@ -111,20 +111,24 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
       try {
         const data = isSignup
           ? await signup({ name, email, password, mobile_number: phone })
-          : await loginAPI({ email, password });
+          // : await loginAPI({ email, password });
+          :await getAllMovies();
+
+        if (!data) {
+          throw new Error('No data returned from API');
+        }
+    
         console.log(`${isSignup ? 'Sign-up' : 'Sign-in'} successful:`, data);
-        navigate('/user/dashboard');
-      } 
-      // catch (error: any) {
-      //   console.error(`${isSignup ? 'Sign-up' : 'Sign-in'} failed:`, error.message);
-      //   this.setState((prevState) => ({
-      //     errors: {
-      //       ...prevState.errors,
-      //       email: 'Sign-in failed. Please check your email and password.',
-      //     },
-      //   }));
-      // }
-       finally {
+        navigate(isSignup ? '/': '/user/dashboard')
+      } catch (error: any) {
+        console.error(`${isSignup ? 'Sign-up' : 'Sign-in'} failed:`, error.message);
+        this.setState((prevState) => ({
+          errors: {
+            ...prevState.errors,
+            email: 'Sign-in failed. Please check your email and password.',
+          },
+        }));
+      } finally {
         this.setState({ loading: false });
       }
     }
