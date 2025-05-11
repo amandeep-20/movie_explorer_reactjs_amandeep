@@ -11,7 +11,7 @@ class Footer extends Component {
       <Box
         component="footer"
         sx={{
-          background: "black",
+          background: "black;",
           color: "#e2e8f0",
           py: 8,
           px: 4,

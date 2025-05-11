@@ -9,7 +9,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AuthLayout from '../../components/layouts/AuthLayout';
-import { getAllMovies, signup } from '../../utils/API';
+import { loginAPI, signup } from '../../utils/API';
 import WithNavigation from '../common/WithNavigation';
 
 interface Errors {
@@ -111,8 +111,7 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
       try {
         const data = isSignup
           ? await signup({ name, email, password, mobile_number: phone })
-          // : await loginAPI({ email, password });
-          :await getAllMovies();
+          : await loginAPI({ email, password });
 
         if (!data) {
           throw new Error('No data returned from API');
@@ -301,7 +300,7 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
             {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
             <span
               className="font-medium text-white hover:underline cursor-pointer"
-              onClick={() => this.props.navigate(isSignup ? '/login' : '/signup')}
+              onClick={() => this.props.navigate(isSignup ? '/' : '/signup')}
               style={{ color: '#ffffff' }}
             >
               {isSignup ? 'Login' : 'Sign Up'}

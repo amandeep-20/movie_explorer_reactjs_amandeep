@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton, CircularProgress } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import MovieItem from './MovieItem';
-import { Episode } from '../../../config/MoviesData';
 import { useNavigate } from 'react-router-dom';
 import { getMoviesByGenre } from '../../utils/API';
+import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus'; // Import the hook
 
 interface Movie {
   id: number;
@@ -23,12 +23,29 @@ interface Movie {
   banner_url: string;
 }
 
-interface CarouselProps {
+interface Episode {
+  id: number;
   title: string;
-  genre: string; 
+  image: string;
+  starRating: number;
+  year: number;
+  duration: string;
+  date: string;
+  desc: string;
+  director: string;
+  main_lead: string;
+  streaming_platform: string;
+  premium: boolean;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
+interface CarouselProps {
+  title: string;
+  genre: string;
+  role?: string;
+  onDelete?: (id: number) => void;
+}
+
+const Carousel: React.FC<CarouselProps> = ({ title, genre, role, onDelete }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -36,7 +53,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  const { subscriptionPlan, loading: subscriptionLoading, error: subscriptionError } = useSubscriptionStatus();
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -45,43 +62,41 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        console.log(`Fetching movies for genre: ${genre}`);
-        const movieData = await getMoviesByGenre(genre);
-        console.log('Raw API response:', movieData);
+  const fetchMovies = async () => {
+    try {
+      const movieData = await getMoviesByGenre(genre);
+      const movieArray = movieData?.movies || movieData || [];
 
-        if (Array.isArray(movieData) && movieData.length > 0) {
-          const formattedMovies: Episode[] = movieData.map((movie: Movie) => ({
-            id: movie.id,
-            title: movie.title || 'Untitled',
-            image: movie.poster_url || 'https://via.placeholder.com/200x300',
-            starRating: movie.rating || 0,
-            year: movie.release_year || 0,
-            duration: movie.duration
-              ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m`
-              : '0h 0m',
-            date: new Date().toISOString().split('T')[0],
-            desc: movie.description || 'No description available',
-            director: movie.director || 'Unknown',
-            main_lead: movie.main_lead || 'Unknown',
-            streaming_platform: movie.streaming_platform || 'Unknown',
-          }));
-          console.log('Mapped movies:', formattedMovies);
-          setMovies(formattedMovies);
-        } else {
-          console.log(`No movies found for genre: ${genre}`);
-          setError('No movies available');
-        }
-      } catch (err: any) {
-        console.error('Error fetching movies:', err.message);
-        setError('Failed to load movies');
-      } finally {
-        setLoading(false);
+      if (Array.isArray(movieArray) && movieArray.length > 0) {
+        const formattedMovies: Episode[] = movieArray.map((movie: Movie) => ({
+          id: movie.id,
+          title: movie.title || 'Untitled',
+          image: movie.poster_url || 'https://via.placeholder.com/200x300',
+          starRating: movie.rating || 0,
+          year: movie.release_year || 0,
+          duration: movie.duration
+            ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m`
+            : '0h 0m',
+          date: new Date().toISOString().split('T')[0],
+          desc: movie.description || 'No description available',
+          director: movie.director || 'Unknown',
+          main_lead: movie.main_lead || 'Unknown',
+          streaming_platform: movie.streaming_platform || 'Unknown',
+          premium: movie.premium || false,
+        }));
+        setMovies(formattedMovies);
+      } else {
+        setError('No movies available');
       }
-    };
+    } catch (err: any) {
+      console.error('Error fetching movies:', err.message);
+      setError('Failed to load movies');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchMovies();
   }, [genre]);
 
@@ -110,18 +125,35 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
     navigate('/user/getMovies');
   };
 
-  if (loading) {
+  const handleDelete = (id: number) => {
+    setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== id));
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
+
+  if (loading || subscriptionLoading) {
     return (
-      <Box sx={{ bgcolor: '#181818', color: '#fff', p: 3 }}>
-        <Typography>Loading movies...</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '50vh',
+          bgcolor: '#181818',
+          color: '#fff',
+          p: 3,
+        }}
+      >
+        <CircularProgress sx={{ color: '#E50914' }} />
       </Box>
     );
   }
 
-  if (error) {
+  if (error || subscriptionError) {
     return (
       <Box sx={{ bgcolor: '#181818', color: '#fff', p: 3 }}>
-        <Typography>{error}</Typography>
+        <Typography>{error || subscriptionError}</Typography>
       </Box>
     );
   }
@@ -135,39 +167,21 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
   }
 
   return (
-    <Box sx={{ bgcolor: '#181818', color: '#fff', p: 3 }}>
-      <Typography
-        variant="h5"
-        fontWeight="bold"
-        mb={3}
-        color="#fff"
-        sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}
-      >
-        {title}
-      </Typography>
+    <Box sx={{ bgcolor: 'rgb(20, 20, 30)', color: '#f7b345', p: 3 }}>
       <Box
-        display={'flex'}
-        alignItems={'center'}
-        justifyContent={'space-between'}
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
       >
         <Typography
-          variant="h6"
+          variant="h5"
+          fontWeight="bold"
+          mb={3}
           color="#fff"
-          sx={{
-            display: 'inline',
-            fontWeight: 'bold',
-            '&:before': {
-              content: '"|"',
-              color: '#ffd700',
-              mr: 1,
-            },
-            '&:after': {
-              content: '" >"',
-              color: '#ffd700',
-            },
-          }}
+          sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}
         >
-          "TV shows and movies just for you"
+          {title}
         </Typography>
         <Typography
           onClick={handleSeeAll}
@@ -195,7 +209,14 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
           }}
         >
           {movies.map((item, index) => (
-            <MovieItem key={item.id} episode={item} index={index} />
+            <MovieItem
+              key={item.id}
+              episode={item}
+              index={index}
+              role={role}
+              subscriptionPlan={subscriptionPlan} // Pass subscriptionPlan to MovieItem
+              onDelete={handleDelete}
+            />
           ))}
         </Box>
         {canScrollLeft && (

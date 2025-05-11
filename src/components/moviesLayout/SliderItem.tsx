@@ -1,11 +1,25 @@
 import React from "react";
 import { Box, Button, Typography, Fade, IconButton } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import EditIcon from "@mui/icons-material/Edit";
-import { Episode } from "../../../config/MoviesData";
 import WithNavigation from "../common/WithNavigation";
-import RoleContext from "../../context/RoleContext";
+
+
+export interface Episode {
+  id: number;
+  title: string;
+  duration: string;
+  date: string;
+  image: string;
+  image2: string;
+  year: number;
+  starRating: number;
+  desc: string;
+  director: string; 
+  main_lead: string; 
+  streaming_platform: string;
+}
+
+
 
 interface SliderItemProps {
   episode: Episode;
@@ -15,9 +29,6 @@ interface SliderItemProps {
 }
 
 class SliderItem extends React.Component<SliderItemProps> {
-  static contextType = RoleContext;
-  declare context: React.ContextType<typeof RoleContext>;
-
   handleClick = () => {
     const { navigate, episode } = this.props;
     if (navigate) {
@@ -35,8 +46,6 @@ class SliderItem extends React.Component<SliderItemProps> {
 
   render() {
     const { episode, isActive } = this.props;
-    const isAdmin = this.context.role === "admin";
-
     return (
       <Box
         onClick={this.handleClick}
@@ -48,20 +57,24 @@ class SliderItem extends React.Component<SliderItemProps> {
           height: "100%",
           opacity: isActive ? 1 : 0,
           transition: "opacity 0.8s ease-in-out",
-          zIndex: isActive ? 0 : -1,
+          zIndex: isActive ? 1 : -1,
           cursor: "pointer",
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          bgcolor: "#181818",
         }}
       >
-        {/* Background Image */}
+        {/* Background Image (Banner) */}
         <Box
           sx={{
             position: "absolute",
             top: 0,
-            left: 0, // Full width across all views
+            left: 0,
             width: "100%",
             height: "100%",
             zIndex: -1,
             overflow: "hidden",
+            opacity: 0.3,
           }}
         >
           <Box
@@ -69,179 +82,204 @@ class SliderItem extends React.Component<SliderItemProps> {
             src={episode.image}
             alt={episode.title}
             sx={{
-              width: "100%", // Full width in all views
+              width: "100%",
               height: "100%",
-              objectFit: "cover", // Ensures image fills without distortion
-              objectPosition: "center", // Centers the image
+              objectFit: "cover",
+              objectPosition: "center",
             }}
           />
         </Box>
 
-        {/* Content Container */}
+        {/* Left Side: Poster Image */}
         <Box
           sx={{
-            position: "absolute",
-            top: { xs: "10%", sm: "15%", md: "150px" },
-            bottom: { xs: "10%", sm: "15%", md: "40%" },
-            left: { xs: 16, sm: 24, md: 80 },
-            maxWidth: { xs: "92%", sm: "80%", md: "45%" },
-            zIndex: 2,
+            flex: { xs: "0 0 auto", md: "0 0 40%" },
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            p: { xs: 2, md: 4 },
+            height: { xs: "auto", md: "100%" },
+          }}
+        >
+          <Box
+            component="img"
+            src={episode.image2}
+            alt={`${episode.title} poster`}
+            sx={{
+              width: { xs: "30%", sm: "20%", md: "100%" },
+              maxWidth: "300px",
+              height: { xs: "80%", sm: "50%", md: "100%" },
+              maxHeight:"400px",
+              borderRadius: 2,
+              boxShadow: "0 8px 16px rgba(0,0,0,0.5)",
+              transition: "transform 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
+          />
+        </Box>
+
+        {/* Right Side: Content */}
+        <Box
+          sx={{
+            flex: { xs: "1 1 auto", md: "1 1 60%" },
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            p: { xs: 2, md: 4 },
+            color: "#fff",
+            textAlign: { xs: "center", md: "left" },
           }}
         >
           {/* Title */}
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Fade
-              in={isActive}
-              timeout={800}
-              style={{ transitionDelay: isActive ? "400ms" : "0ms" }}
+          <Fade
+            in={isActive}
+            timeout={800}
+            style={{ transitionDelay: isActive ? "400ms" : "0ms" }}
+          >
+            <Typography
+              variant="h1"
+              fontWeight="900"
+              color="#fff"
+              title={episode.title}
+              sx={{
+                fontSize: { xs: "2rem", sm: "3rem", md: "3rem" },
+                pb: 2,
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
+                backgroundImage:
+                  "linear-gradient(120deg, #FFFFFF 0%, #FFD700 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                maxWidth: "100%",
+                textOverflow: "ellipsis",
+              }}
             >
-              <Typography
-                variant="h1"
-                fontWeight="900"
-                color="#fff"
-                title={episode.title}
-                sx={{
-                  fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" },
-                  textShadow: "0 2px 12px rgba(0,0,0,0.6)",
-                  pb: 3,
-                  lineHeight: { xs: 1.1, md: 1 },
-                  letterSpacing: "-0.02em",
-                  backgroundImage:
-                    "linear-gradient(120deg, #FFFFFF 0%, #FFD700 100%)",
-                  WebkitBackgroundClip: "text",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  maxWidth: "100%",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {episode.title}
-              </Typography>
-            </Fade>
-            {/* Description */}
-            <Fade
-              in={isActive}
-              timeout={800}
-              style={{ transitionDelay: isActive ? "600ms" : "0ms" }}
+              {episode.title}
+            </Typography>
+          </Fade>
+
+          {/* Description */}
+          <Fade
+            in={isActive}
+            timeout={800}
+            style={{ transitionDelay: isActive ? "600ms" : "0ms" }}
+          >
+            <Typography
+              variant="body1"
+              color="#fff"
+              sx={{
+                mt: 2,
+                display: "-webkit-box",
+                WebkitLineClamp: { xs: 3, md: 4 },
+                lineClamp: { xs: 3, md: 4 },
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontSize: { xs: "0.9rem", md: "1rem" },
+                maxWidth: { xs: "100%", md: "90%" },
+                lineHeight: 1.6,
+                textShadow: "0 1px 3px rgba(0,0,0,0.4)",
+                fontWeight: 300,
+              }}
             >
-              <Typography
-                variant="body1"
-                color="#fff"
-                sx={{
-                  mt: 3,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  lineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  fontSize: { xs: "1rem", md: "1.1rem" },
-                  maxWidth: { xs: "100%", md: "90%" },
-                  lineHeight: 1.6,
-                  textShadow: "0 1px 3px rgba(0,0,0,0.4)",
-                  fontWeight: 300,
-                }}
-              >
-                {episode.desc}
+              {episode.desc}
+            </Typography>
+          </Fade>
+
+          {/* Meta Info */}
+          <Fade
+            in={isActive}
+            timeout={800}
+            style={{ transitionDelay: isActive ? "700ms" : "0ms" }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1.5,
+                mt: 2,
+                justifyContent: { xs: "center", md: "flex-start" },
+              }}
+            >
+              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+                {episode.duration}
               </Typography>
-            </Fade>
-          </Box>
+              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+                {episode.year}
+              </Typography>
+              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+                {episode.starRating} ★
+              </Typography>
+            </Box>
+          </Fade>
 
           {/* Buttons */}
-          <Box sx={{ marginTop: "150px" }}>
-            <Fade
-              in={isActive}
-              timeout={800}
-              style={{ transitionDelay: isActive ? "700ms" : "0ms" }}
+          <Fade
+            in={isActive}
+            timeout={800}
+            style={{ transitionDelay: isActive ? "800ms" : "0ms" }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                mt: 3,
+                justifyContent: { xs: "center", md: "flex-start" },
+                flexWrap: "wrap",
+              }}
             >
-              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                <Button
-                  variant="contained"
-                  startIcon={<PlayArrowIcon />}
-                  sx={{
-                    bgcolor: "#fff",
-                    color: "#000",
-                    "&:hover": {
-                      bgcolor: "#E50914",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 6px 12px rgba(255,215,0,0.3)",
-                    },
-                    px: { xs: 2, md: 3 },
-                    py: 1,
-                    fontWeight: 600,
-                    borderRadius: 2,
-                    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  Watch now
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<InfoOutlinedIcon />}
-                  sx={{
-                    borderColor: "rgba(255, 255, 255, 0.5)",
-                    color: "#fff",
-                    "&:hover": {
-                      borderColor: "#fff",
-                      bgcolor: "rgba(255, 255, 255, 0.05)",
-                      transform: "translateY(-2px)",
-                    },
-                    px: { xs: 2, md: 3 },
-                    py: 1,
-                    fontWeight: 500,
-                    borderRadius: 2,
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  More Info
-                </Button>
-              </Box>
-            </Fade>
+              
+              <Button
+                variant="outlined"
+                startIcon={<InfoOutlinedIcon />}
+                sx={{
+                  borderColor: "rgba(255, 255, 255, 0.7)",
+                  color: "#fff",
+                  "&:hover": {
+                    borderColor: "#fff",
+                    background:"#E50914",
+                    transform: "translateY(-2px)",
+                  },
+                  px: { xs: 2, md: 3 },
+                  py: 1,
+                  fontWeight: 500,
+                  borderRadius: 2,
+                  transition: "all 0.3s ease",
+                }}
+              >
+                More Info
+              </Button>
+            </Box>
+          </Fade>
 
-            {/* Meta Info */}
-            <Fade
-              in={isActive}
-              timeout={800}
-              style={{ transitionDelay: isActive ? "800ms" : "0ms" }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 3 }}>
-                <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
-                  Subscribe for ₹99/month
-                </Typography>
-                <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
-                  Watch with a Prime membership
-                </Typography>
-              </Box>
-            </Fade>
-          </Box>
-        </Box>
-
-        {/* Edit Button for Admins */}
-        {isAdmin && (
+          {/* Subscription Info */}
           <Fade
             in={isActive}
             timeout={800}
             style={{ transitionDelay: isActive ? "900ms" : "0ms" }}
           >
-            <IconButton
-              onClick={this.handleEditClick}
+            <Box
               sx={{
-                position: "absolute",
-                top: 16,
-                right: 16,
-                bgcolor: "rgba(0, 0, 0, 0.5)",
-                color: "#fff",
-                "&:hover": { bgcolor: "rgba(0, 0, 0, 0.7)" },
-                zIndex: 3,
-                transition: "all 0.3s ease",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1.5,
+                mt: 2,
+                justifyContent: { xs: "center", md: "flex-start" },
               }}
-              aria-label={`Edit ${episode.title}`}
             >
-              <EditIcon />
-            </IconButton>
+              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+                Subscribe for ₹99/month
+              </Typography>
+              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+                Watch with a Prime membership
+              </Typography>
+            </Box>
           </Fade>
-        )}
+        </Box>
       </Box>
     );
   }
