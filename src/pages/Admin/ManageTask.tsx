@@ -100,11 +100,11 @@ const ManageTask: React.FC = () => {
             }
           } else {
             toast.error("Movie not found");
-            navigate("/user/dashboard");
+            // navigate("/user/dashboard");
           }
         } catch (error) {
           toast.error("Failed to load movie data");
-          navigate("/user/dashboard");
+          // navigate("/user/dashboard");
         }
       };
       fetchMovie();
@@ -153,13 +153,31 @@ const ManageTask: React.FC = () => {
         }
       }
       if (movie) {
-        navigate("/user/dashboard");
+        setFormData({
+          title: "",
+          genre: "",
+          releaseYear: "",
+          director: "",
+          duration: "",
+          description: "",
+          mainLead: "",
+          streamingPlatform: "",
+          rating: "",
+          poster: null,
+          banner: null,
+          isPremium: false,
+        });
       }
     } catch (error) {
-      // Error is handled in API functions
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     }
-  };
-
+};
+  
+  
   const handleCancel = () => {
     navigate("/user/dashboard");
   };
