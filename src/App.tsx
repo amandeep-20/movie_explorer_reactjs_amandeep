@@ -1,3 +1,5 @@
+
+
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
@@ -14,7 +16,8 @@ import SubscriptionPage from './pages/User/SubscriptionPage'
 // import CheckoutForm from './pages/User/CheckoutForm'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import Success from "./pages/User/Success"
+import Success from "../src/pages/User/Success"
+import UserInfo from "./pages/User/UserInfo";
 
 const stripePromise = loadStripe('pk_test_51RJqGsI2rCWiq8PAs2nNUz5gv4DO8mVfG1QCuu3F3Xqft2a55FIGY15bNnlz6SoqlU4i1w5HRm1XDmOuEnZk7tI200tg2o30i1')
 
@@ -48,6 +51,7 @@ function App() {
           <Route path="/user/viewMovieDetail/:id" element={<ViewMovieDetail />} />
           <Route path="/user/getMovies" element={<GetMovies />} />
           <Route path='/user/subscription' element={<SubscriptionPage />} />
+          <Route path="/user/info" element={<UserInfo />} />
 
 
           {/* Admin */}

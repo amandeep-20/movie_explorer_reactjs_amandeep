@@ -121,10 +121,7 @@ export default function SubscriptionPage() {
   if (loading) {
     return (
       <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgress size={48} sx={{ color: themeColors.primary }} />
-        <Typography variant="h6" sx={{ mt: 2, color: themeColors.text }}>
-          Loading subscription status...
-        </Typography>
+        <CircularProgress sx={{ color: 'error.main' }} />
       </Box>
     );
   }

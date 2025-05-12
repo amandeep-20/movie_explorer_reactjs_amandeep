@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '../common/Header';
@@ -299,7 +300,6 @@ const GetMovies = () => {
           sx={{ mx: 2, mt: 2, bgcolor: 'rgba(255, 215, 0, 0.1)', color: '#fff' }}
           action={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-\
               <Typography
                 component="a"
                 href="/user/subscription"

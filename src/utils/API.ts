@@ -554,3 +554,31 @@ export const verifySubscription = async (sessionId: string) => {
     throw error || 'Failed to verify subscription. Please try again.';
   }
 };
+
+
+interface UserData {
+  email?: string;
+  role?: string;
+  name?: string;
+  join_date?: string;
+  mobile_number?: string;
+}
+
+// Fetch current user data
+export const fetchCurrentUser = async (): Promise<UserData> => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+    const response = await axios.get(`${BASE_URL}/api/v1/current_user`, {
+      headers: {
+         'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch user data');
+  }
+};

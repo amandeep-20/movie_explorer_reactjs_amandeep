@@ -10,6 +10,7 @@ import {
   Avatar,
   Divider,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -84,7 +85,7 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <Typography>Loading subscription status...</Typography>
+        <CircularProgress sx={{ color: 'error.main' }} />
       </Box>
     );
   }
