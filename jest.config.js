@@ -5,7 +5,7 @@ export default {
       "^.+\\.tsx?$": ["ts-jest", {}],
     },
     moduleNameMapper: {
-      '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/src/_mocks_/fileMock.ts',
+      '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/src/__mocks__/fileMock.ts',
     },
     setupFiles: ['<rootDir>/jest.setup.ts'],
     

@@ -30,7 +30,6 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
           overflow: 'hidden',
         }}
       >
-        {/* Dark overlay without blur - matches the image better */}
         <Box
           sx={{
             position: 'absolute',
@@ -43,7 +42,6 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
           }}
         />
         
-        {/* Logo Button - Optional based on your design needs */}
         <Button
           onClick={this.handleNavigate}
           sx={{
@@ -71,7 +69,6 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
           </Typography>
         </Button>
         
-        {/* Content Container - Completely transparent */}
         <Box
           sx={{
             zIndex: 2,
