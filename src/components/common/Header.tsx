@@ -23,6 +23,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import StarIcon from '@mui/icons-material/Star';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { onMessage, messaging } from '../../notifications/firebase';
 import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus';
 
@@ -135,31 +136,11 @@ const Header = () => {
 
   const renderMembershipBadge = () => {
     if (role === 'guest') return null;
-
-    if (membershipType === 'premium') {
-      return (
-        <Chip
-          label="PREMIUM"
-          size="small"
-          sx={{
-            background: 'linear-gradient(90deg, #facc15 0%, #f59e0b 100%)',
-            color: 'black',
-            fontWeight: 'bold',
-            fontSize: '0.7rem',
-            height: '20px',
-            ml: 1,
-            px: 1,
-            borderRadius: '4px',
-            boxShadow: '0 0 8px rgba(250, 204, 21, 0.6)',
-            '&:hover': {
-              background: 'linear-gradient(90deg, #f59e0b 0%, #facc15 100%)',
-            },
-          }}
-        />
-      );
-    }
-
     return null;
+  };
+
+  const handleProfileClick = () => {
+    navigate('/user/info');
   };
 
   const renderSubscriberButton = (isMobileDrawer = false) => {
@@ -216,29 +197,26 @@ const Header = () => {
           <Button
             component={RouterLink}
             to="/user/subscription"
-            sx={{
-              ...commonStyles,
-              background: 'linear-gradient(90deg, #facc15 0%, #f59e0b 100%)',
-              color: 'black',
-              fontWeight: 'bold',
-              boxShadow: '0 0 8px rgba(250, 204, 21, 0.6)',
-              '&:hover': {
-                background: 'linear-gradient(90deg, #f59e0b 0%, #facc15 100%)',
-                color: 'black',
-                transform: 'translateY(-2px)',
-                boxShadow: '0 0 12px rgba(250, 204, 21, 0.8)',
-              },
-              '&:after': isActive('/user/subscription')
-                ? {
-                    ...commonStyles['&:after'],
-                    bgcolor: '#E50914',
-                  }
-                : {},
-            }}
-            startIcon={<StarIcon sx={{ color: 'black' }} />}
+            variant="contained"
+            startIcon={<StarIcon sx={{ color: isActive('/user/subscription') ? '#E50914' : '#facc15' }} />}
             aria-label="Premium Subscriber"
+            sx={{
+              background: isActive('/user/subscription')
+                ? 'rgba(229, 9, 20, 0.1)'
+                : 'rgba(250, 204, 21, 0.05)',
+              borderBottom: isActive('/user/subscription') ? '4px solid #E50914' : '4px solid transparent',
+              boxShadow: 'none',
+              color: isActive('/user/subscription') ? '#E50914' : '#facc15',
+              fontWeight: 'normal',
+              justifyContent: 'flex-start',
+              pl: 2,
+              '&:hover': {
+                background: 'rgba(250, 204, 21, 0.1)',
+                boxShadow: 'none',
+              },
+            }}
           >
-            Premium
+            Active
           </Button>
         </Tooltip>
       );
@@ -490,83 +468,50 @@ const Header = () => {
                 </Button>
               ) : (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {role === 'supervisor' && (
-                    <Tooltip title="Create New Content" arrow>
-                      <Button
-                        component={RouterLink}
-                        to="/admin/manageTask"
-                        sx={{
-                          color: 'white',
-                          bgcolor: 'rgba(255, 255, 255, 0.1)',
-                          borderRadius: '6px',
-                          px: 1.5,
-                          mr: 2,
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            bgcolor: 'rgba(255, 255, 255, 0.2)',
-                            transform: 'translateY(-2px)',
-                          },
-                        }}
-                        startIcon={<PersonIcon />}
-                      >
-                        Create New
-                      </Button>
-                    </Tooltip>
-                  )}
-
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      bgcolor: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '20px',
-                      py: 0.5,
-                      px: 1.5,
-                    }}
-                  >
-                    <Avatar
+                  <Tooltip title="View Profile" arrow>
+                    <Box
+                      onClick={handleProfileClick}
                       sx={{
-                        width: 30,
-                        height: 30,
-                        bgcolor: '#E50914',
-                        fontSize: '0.8rem',
-                        boxShadow: '0 0 8px rgba(229, 9, 20, 0.4)',
-                      }}
-                    >
-                      {email ? email.charAt(0).toUpperCase() : role.charAt(0).toUpperCase()}
-                    </Avatar>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'white',
-                        ml: 1,
-                        maxWidth: '120px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {role === 'supervisor' ? 'Supervisor' : (email || 'User')}
-                      {renderMembershipBadge()}
-                    </Typography>
-                  </Box>
-
-                  <Tooltip title="Logout" arrow>
-                    <IconButton
-                      onClick={handleLogout}
-                      sx={{
-                        color: 'white',
-                        ml: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        bgcolor: 'rgba(255, 255, 255, 0.05)',
+                        borderRadius: '20px',
+                        py: 0.5,
+                        px: 1.5,
+                        cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         '&:hover': {
-                          color: '#E50914',
-                          transform: 'scale(1.1)',
+                          bgcolor: 'rgba(255, 255, 255, 0.1)',
+                          transform: 'scale(1.02)',
                         },
                       }}
-                      aria-label="logout"
                     >
-                      <LogoutIcon />
-                    </IconButton>
+                      <Avatar
+                        sx={{
+                          width: 30,
+                          height: 30,
+                          bgcolor: '#E50914',
+                          fontSize: '0.8rem',
+                          boxShadow: '0 0 8px rgba(229, 9, 20, 0.4)',
+                        }}
+                      >
+                        {email ? email.charAt(0).toUpperCase() : role.charAt(0).toUpperCase()}
+                      </Avatar>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: 'white',
+                          ml: 1,
+                          maxWidth: '120px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {role === 'supervisor' ? 'Supervisor' : (email || 'User')}
+                        {renderMembershipBadge()}
+                      </Typography>
+                    </Box>
                   </Tooltip>
                 </Box>
               )}
@@ -628,7 +573,7 @@ const Header = () => {
               bgcolor: 'rgba(255, 255, 255, 0.05)',
               color: 'white',
               fontSize: '1rem',
-              outline: 'basic',
+              outline: 'none',
               transition: 'all 0.3s ease',
               '&:focus': {
                 border: '1px solid #E50914',
@@ -742,6 +687,29 @@ const Header = () => {
           </ListItem>
 
           {role !== 'guest' && renderSubscriberButton(true)}
+
+          {role !== 'guest' && (
+            <ListItem
+              component={RouterLink}
+              to="/user/info"
+              sx={{
+                borderLeft: isActive('/user/info') ? '4px solid #E50914' : '4px solid transparent',
+                bgcolor: isActive('/user/info') ? 'rgba(229, 9, 20, 0.1)' : 'transparent',
+                pl: 2,
+                '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.05)' },
+              }}
+            >
+              <ListItemIcon
+                sx={{ color: isActive('/user/info') ? '#E50914' : 'white', minWidth: '40px' }}
+              >
+                <PersonOutlineIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="User Info"
+                sx={{ color: isActive('/user/info') ? '#E50914' : 'white' }}
+              />
+            </ListItem>
+          )}
 
           {role === 'supervisor' && (
             <ListItem
