@@ -24,13 +24,17 @@ import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import { Plan } from './Types';
 import { createSubscription } from '../../utils/API';
+import { useSubscriptionStatus } from '../../components/hooks/useSubscriptionStatus'; 
 
-// Main component
 export default function SubscriptionPage() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Use the subscription status hook
+  const { subscriptionPlan, loading, error: subscriptionError } = useSubscriptionStatus();
+  const hasActiveSubscription = subscriptionPlan !== 'none';
 
   const plans: Plan[] = [
     {
@@ -90,7 +94,7 @@ export default function SubscriptionPage() {
       if (checkoutUrl) {
         console.log('Redirecting to:', checkoutUrl);
         window.location.href = checkoutUrl;
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
       } else {
         throw new Error('No checkout URL returned from server.');
       }
@@ -101,7 +105,6 @@ export default function SubscriptionPage() {
     }
   };
 
-  // Theme colors
   const themeColors = {
     background: '#0a1929',
     cardBg: '#132f4c',
@@ -115,71 +118,44 @@ export default function SubscriptionPage() {
     highlight: '#ff9800',
   };
 
-  if (showSuccess) {
+  if (loading) {
     return (
-      <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Header />
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 4,
-              maxWidth: 'sm',
-              width: '100%',
-              textAlign: 'center',
-              bgcolor: themeColors.cardBg,
-              color: themeColors.text,
-              borderRadius: 2,
-              border: `1px solid ${themeColors.primary}`,
-            }}
-          >
-            <Box sx={{ 
-              width: 64, 
-              height: 64, 
-              bgcolor: 'rgba(76, 175, 80, 0.2)', 
-              borderRadius: '50%', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              mx: 'auto', 
-              mb: 3 
-            }}>
-              <CheckCircle sx={{ fontSize: 36, color: themeColors.success }} />
-            </Box>
-            <Typography variant="h4" component="h2" gutterBottom>
-              Subscription Activated!
-            </Typography>
-            <Typography variant="body1" color={themeColors.textSecondary} gutterBottom sx={{ mb: 3 }}>
-              Thank you for subscribing to Movie Explorer. Your {plans.find((p) => p.id === selectedPlan)?.name} has been activated.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              onClick={() => (window.location.href = '/dashboard')}
-              sx={{ 
-                bgcolor: themeColors.accent, 
-                '&:hover': { bgcolor: themeColors.primary },
-                py: 1.5,
-                fontWeight: 'bold',
-              }}
-            >
-              Start Exploring Movies
-            </Button>
-          </Paper>
-        </Box>
-        <Footer />
+      <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress size={48} sx={{ color: themeColors.primary }} />
+        <Typography variant="h6" sx={{ mt: 2, color: themeColors.text }}>
+          Loading subscription status...
+        </Typography>
       </Box>
     );
   }
 
-  // Main subscription page
+  if (subscriptionError) {
+    return (
+      <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <Typography variant="h6" color="error" sx={{ mb: 2 }}>
+          {subscriptionError}
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => window.location.reload()}
+          sx={{
+            bgcolor: themeColors.accent,
+            '&:hover': { bgcolor: themeColors.primary },
+            fontWeight: 'bold',
+          }}
+        >
+          Try Again
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
-      <Box 
-        sx={{ 
-          flex: 1, 
+      <Box
+        sx={{
+          flex: 1,
           py: 6,
           backgroundImage: 'linear-gradient(to bottom, rgba(10, 25, 41, 0.8), rgba(10, 25, 41, 0.95)), url(/images/cinema-bg.jpg)',
           backgroundSize: 'cover',
@@ -188,30 +164,39 @@ export default function SubscriptionPage() {
       >
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', mb: 6 }}>
-            <Typography 
-              variant="h3" 
-              component="h1" 
-              fontWeight="bold" 
-              gutterBottom 
-              sx={{ color: themeColors.text }}
-            >
-              Choose Your Movie Explorer Plan
-            </Typography>
-            <Typography variant="h6" color={themeColors.textSecondary}>
-              Unlock premium content with a subscription that fits your schedule
-            </Typography>
+            {!hasActiveSubscription ? (
+              <>
+                <Typography
+                  variant="h3"
+                  component="h1"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: themeColors.text }}
+                >
+                  Choose Your Movie Explorer Plan
+                </Typography>
+                <Typography variant="h6" color={themeColors.textSecondary}>
+                  Unlock premium content with a subscription that fits your schedule
+                </Typography>
+              </>
+            ) : (
+              <Typography variant="h5"
+                  component="h1" sx={{fontSize: { xs: '1rem', sm: '1rem', md: '1.6rem' }}}  color={themeColors.primary}>
+                You currently have an active subscription. Please wait until it expires to select a new plan.
+              </Typography>
+            )}
           </Box>
 
-          <Box sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            justifyContent: 'center', 
-            mb: 6, 
-            gap: 3, 
-            '@media (max-width: 900px)': { 
-              flexDirection: 'column', 
-              alignItems: 'center' 
-            } 
+          <Box sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            mb: 6,
+            gap: 3,
+            '@media (max-width: 900px)': {
+              flexDirection: 'column',
+              alignItems: 'center',
+            },
           }}>
             {plans.map((plan) => (
               <Card
@@ -228,19 +213,21 @@ export default function SubscriptionPage() {
                   borderRadius: 2,
                   overflow: 'visible',
                   border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'none',
-                  '&:hover': { 
-                    transform: 'translateY(-5px)',
-                    boxShadow: `0 10px 20px rgba(0,0,0,0.2), 0 0 0 2px ${themeColors.primary}30`
+                  '&:hover': {
+                    transform: hasActiveSubscription ? 'none' : 'translateY(-5px)',
+                    boxShadow: hasActiveSubscription
+                      ? 'none'
+                      : `0 10px 20px rgba(0,0,0,0.2), 0 0 0 2px ${themeColors.primary}30`,
                   },
                 }}
               >
                 {plan.popular && (
                   <Chip
                     label="MOST POPULAR"
-                    sx={{ 
-                      position: 'absolute', 
-                      top: -12, 
-                      right: 24, 
+                    sx={{
+                      position: 'absolute',
+                      top: -12,
+                      right: 24,
                       bgcolor: themeColors.highlight,
                       color: '#000',
                       fontWeight: 'bold',
@@ -264,11 +251,11 @@ export default function SubscriptionPage() {
                         <ListItemIcon sx={{ minWidth: 28 }}>
                           <Check sx={{ color: themeColors.success }} fontSize="small" />
                         </ListItemIcon>
-                        <ListItemText 
-                          primary={feature} 
-                          primaryTypographyProps={{ 
-                            color: themeColors.text 
-                          }} 
+                        <ListItemText
+                          primary={feature}
+                          primaryTypographyProps={{
+                            color: themeColors.text,
+                          }}
                         />
                       </ListItem>
                     ))}
@@ -280,13 +267,19 @@ export default function SubscriptionPage() {
                     size="large"
                     fullWidth
                     onClick={() => setSelectedPlan(plan.id)}
+                    disabled={hasActiveSubscription}
                     sx={{
                       bgcolor: selectedPlan === plan.id ? themeColors.primary : 'transparent',
                       color: selectedPlan === plan.id ? '#000' : themeColors.primary,
                       borderColor: themeColors.primary,
-                      '&:hover': { 
+                      '&:hover': {
                         bgcolor: selectedPlan === plan.id ? themeColors.secondary : `${themeColors.primary}20`,
-                        borderColor: themeColors.primary 
+                        borderColor: themeColors.primary,
+                      },
+                      '&:disabled': {
+                        bgcolor: 'rgba(255, 255, 255, 0.12)',
+                        color: 'rgba(255, 255, 255, 0.3)',
+                        borderColor: 'rgba(255, 255, 255, 0.3)',
                       },
                       textTransform: 'none',
                       fontWeight: 'bold',
@@ -301,7 +294,7 @@ export default function SubscriptionPage() {
             ))}
           </Box>
 
-          {selectedPlan && (
+          {selectedPlan && !hasActiveSubscription && (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Paper
                 elevation={5}
@@ -333,9 +326,9 @@ export default function SubscriptionPage() {
                   fullWidth
                   disabled={isProcessing}
                   onClick={handleSubscribe}
-                  sx={{ 
-                    py: 1.5, 
-                    bgcolor: themeColors.accent, 
+                  sx={{
+                    py: 1.5,
+                    bgcolor: themeColors.accent,
                     '&:hover': { bgcolor: themeColors.primary },
                     fontWeight: 'bold',
                     fontSize: '1.1rem',
