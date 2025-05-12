@@ -101,7 +101,7 @@ const ViewMovieDetail: React.FC = () => {
     <Box sx={{ bgcolor: '#0a0a0a', color: '#fff', minHeight: '100vh' }}>
       <Header />
       <MoviesDetail movie={movie} />
-      <Carousel title="Related Movies" genre={primaryGenre} role={role} subscriptionPlan={subscriptionPlan} />
+      <Carousel title="Related Movies" genre={primaryGenre} role={role}  />
       <Footer />
     </Box>
   );

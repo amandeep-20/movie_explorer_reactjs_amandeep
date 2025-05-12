@@ -34,7 +34,7 @@ export default function SubscriptionPage() {
 
   // Use the subscription status hook
   const { subscriptionPlan, loading, error: subscriptionError } = useSubscriptionStatus();
-  const hasActiveSubscription = subscriptionPlan !== 'none';
+  const hasActiveSubscription = subscriptionPlan === 'premium';
 
   const plans: Plan[] = [
     {
@@ -212,11 +212,11 @@ export default function SubscriptionPage() {
                   color: themeColors.text,
                   borderRadius: 2,
                   overflow: 'visible',
-                  border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'none',
+                  border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'basic',
                   '&:hover': {
-                    transform: hasActiveSubscription ? 'none' : 'translateY(-5px)',
+                    transform: hasActiveSubscription ? 'basic' : 'translateY(-5px)',
                     boxShadow: hasActiveSubscription
-                      ? 'none'
+                      ? 'basic'
                       : `0 10px 20px rgba(0,0,0,0.2), 0 0 0 2px ${themeColors.primary}30`,
                   },
                 }}
@@ -281,7 +281,7 @@ export default function SubscriptionPage() {
                         color: 'rgba(255, 255, 255, 0.3)',
                         borderColor: 'rgba(255, 255, 255, 0.3)',
                       },
-                      textTransform: 'none',
+                      textTransform: 'basic',
                       fontWeight: 'bold',
                       fontSize: '1rem',
                       py: 1,

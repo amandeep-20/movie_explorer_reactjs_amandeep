@@ -18,7 +18,6 @@ import StarIcon from '@mui/icons-material/Star';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import PersonIcon from '@mui/icons-material/Person';
 import TvIcon from '@mui/icons-material/Tv';
-import { Episode } from '../../../config/MoviesData';
 import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus'; // Import the hook
 
 interface Movie {
@@ -40,7 +39,21 @@ interface Movie {
 interface MoviesDetailProps {
   movie: Movie;
 }
-
+export interface Episode {
+  id: number;
+  title: string;
+  duration: string;
+  date: string;
+  image: string;
+  image2: string;
+  year: number;
+  starRating: number;
+  desc: string;
+  director: string; 
+  main_lead: string; 
+  streaming_platform: string;
+  premium: boolean;
+}
 const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
   const { subscriptionPlan, loading, error } = useSubscriptionStatus(); // Use the hook
 

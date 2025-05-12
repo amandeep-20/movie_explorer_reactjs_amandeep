@@ -532,3 +532,25 @@ export const sendTokenToBackend = async (token: string): Promise<any> => {
     throw error;
   }
 };
+
+
+
+export const verifySubscription = async (sessionId: string) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    const response = await axios.get(`${BASE_URL}/api/v1/subscriptions/success?session_id=${sessionId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data; 
+  } catch (error) {
+    throw error || 'Failed to verify subscription. Please try again.';
+  }
+};
