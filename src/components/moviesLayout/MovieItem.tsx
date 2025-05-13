@@ -100,6 +100,7 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode, index, role, subscriptio
   return (
     <Box
       onClick={handleClick}
+      data-testid="movie-item-root"
       sx={{
         flex: '0 0 auto',
         width: { xs: 150, sm: 200, md: 220 },

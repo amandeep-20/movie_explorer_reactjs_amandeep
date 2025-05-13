@@ -142,7 +142,6 @@ const AdminDashboard: React.FC = () => {
           title={carousel.title}
           genre={carousel.genre}
           role={role}
-          subscriptionPlan={subscriptionPlan}
           onDelete={handleDelete}
         />
       ))}
