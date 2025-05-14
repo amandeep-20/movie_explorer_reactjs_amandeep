@@ -9,7 +9,7 @@ import ViewMovieDetail from "./pages/User/ViewMovieDetail";
 import ManageTask from "./pages/Admin/ManageTask";
 import { toast, ToastContainer } from 'react-toastify';
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-import GetMovies from "./components/moviesLayout/GetMovies";
+import GetMovies from "./pages/User/GetMovies";
 import { generateToken, messaging } from "./notifications/firebase";
 import { onMessage } from "firebase/messaging";
 import SubscriptionPage from './pages/User/SubscriptionPage'

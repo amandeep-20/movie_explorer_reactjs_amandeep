@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Box, Typography, IconButton, CircularProgress } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import MovieItem from './MovieItem';
+import MovieItem from '../moviesLayout/MovieItem';
 import { useNavigate } from 'react-router-dom';
 import { getMoviesByGenre } from '../../utils/API';
-import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus'; // Import the hook
+import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus'; // Import the hook
 
 interface Movie {
   id: number;

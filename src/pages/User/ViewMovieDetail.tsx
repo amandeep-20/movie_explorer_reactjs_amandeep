@@ -4,7 +4,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 import MoviesDetail from '../../components/movieDetail/MovieDetail';
-import Carousel from '../../components/moviesLayout/Carousel';
+import Carousel from '../../components/common/Carousel';
 import { getMoviesById } from '../../utils/API';
 import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus';
 

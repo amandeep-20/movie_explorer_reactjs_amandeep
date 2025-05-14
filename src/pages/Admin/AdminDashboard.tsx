@@ -3,7 +3,7 @@ import { Box, Typography, CircularProgress } from '@mui/material';
 import { toast } from 'react-toastify';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
-import Carousel from '../../components/moviesLayout/Carousel';
+import Carousel from '../../components/common/Carousel';
 import BigSlider from '../../components/moviesLayout/BigSlider';
 import { Episode } from '../../../config/MoviesData';
 import { getAllMovies } from '../../utils/API';

@@ -1,14 +1,14 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
+import Header from '../../components/common/Header';
+import Footer from '../../components/common/Footer';
 import { Box, Typography, Chip, Paper, InputBase, IconButton, CircularProgress, Pagination, Collapse, Alert } from '@mui/material';
 import { getAllMovies, getMoviesByGenre, searchMoviesByTitle, deleteMovie } from '../../utils/API';
-import MovieItem from './MovieItem';
+import MovieItem from '../../components/moviesLayout/MovieItem';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus'; // Import the hook
+import { useSubscriptionStatus } from '../../components/hooks/useSubscriptionStatus'; // Import the hook
 
 interface Movie {
   id: number;
