@@ -3,21 +3,20 @@ import { deleteToken, getMessaging, getToken, onMessage } from "firebase/messagi
 import { sendTokenToBackend } from "../utils/API";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCKt2wYuYzr0uKWe8o5jUE6p9wb-3lSK68",
-  authDomain: "movie-explorer-5bc8a.firebaseapp.com",
-  projectId: "movie-explorer-5bc8a",
-  storageBucket: "movie-explorer-5bc8a.firebasestorage.app",
-  messagingSenderId: "561268525206",
-  appId: "1:561268525206:web:9ba893c094bf72aed81ab7",
-  measurementId: "G-XPP4G1SXPV"
+  // apiKey: "AIzaSyCKt2wYuYzr0uKWe8o5jUE6p9wb-3lSK68",
+  // authDomain: "movie-explorer-5bc8a.firebaseapp.com",
+  // projectId: "movie-explorer-5bc8a",
+  // storageBucket: "movie-explorer-5bc8a.firebasestorage.app",
+  // messagingSenderId: "561268525206",
+  // appId: "1:561268525206:web:9ba893c094bf72aed81ab7",
+  // measurementId: "G-XPP4G1SXPV"
 
-  // apiKey: "AIzaSyAU1fNyonSkzJdRmcwPLhOrBLCqGlmRpm8",
-  // authDomain: "movie-explorer-acf7c.firebaseapp.com",
-  // projectId: "movie-explorer-acf7c",
-  // storageBucket: "movie-explorer-acf7c.firebasestorage.app",
-  // messagingSenderId: "478584909632",
-  // appId: "1:478584909632:web:64c604248d081920d114a5",
-  // measurementId: "G-VHTF0G8C2K"
+  apiKey: "AIzaSyCHIX68-JJHkTEpPjFHoQCJO9jxD01_5XU",
+  authDomain: "movieexplorer-57075.firebaseapp.com",
+  projectId: "movieexplorer-57075",
+  storageBucket: "movieexplorer-57075.firebasestorage.app",
+  messagingSenderId: "972960795720",
+  appId: "1:972960795720:web:a125cffdb37e3c420e1c7d"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -27,8 +26,8 @@ export const generateToken = async () => {
   try {
     // Check if permission is already granted
     if (Notification.permission === "granted") {
-      const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
-      // const vapidKey = "BC-X5xRxSuqmP23YIvvnmFEeLlttSgvWm4J7yTUvutVlN7RHUra21Wu-mQf-bnzvgSsrYxo8hMwlY_nt-sZsaRg";
+      // const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
+      const vapidKey = "BBbMH-bPmaNatLYbh_FIRM4KJr9fpulK_dAUgK73FCOpOErYrf0QN-W-G3GxOzZ2jT6v8O5keE3CsXDA1Nj_sH8";
 
       const token = await getToken(messaging, { vapidKey });
 
@@ -52,9 +51,9 @@ export const generateToken = async () => {
       }
     }
 
-    // Generate new token
-      // const vapidKey = "BC-X5xRxSuqmP23YIvvnmFEeLlttSgvWm4J7yTUvutVlN7RHUra21Wu-mQf-bnzvgSsrYxo8hMwlY_nt-sZsaRg";
-      const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
+
+      const vapidKey = "BBbMH-bPmaNatLYbh_FIRM4KJr9fpulK_dAUgK73FCOpOErYrf0QN-W-G3GxOzZ2jT6v8O5keE3CsXDA1Nj_sH8";
+      // const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
     const token = await getToken(messaging, { vapidKey });
     console.log("New FCM Token:", token);
 
@@ -74,8 +73,8 @@ export const generateToken = async () => {
 
 export const monitorToken = async () => {
   try {
-      // const vapidKey = "BC-X5xRxSuqmP23YIvvnmFEeLlttSgvWm4J7yTUvutVlN7RHUra21Wu-mQf-bnzvgSsrYxo8hMwlY_nt-sZsaRg";
-      const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
+      const vapidKey = "BBbMH-bPmaNatLYbh_FIRM4KJr9fpulK_dAUgK73FCOpOErYrf0QN-W-G3GxOzZ2jT6v8O5keE3CsXDA1Nj_sH8";
+      // const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
     const token = await getToken(messaging, { vapidKey }).catch(async (error) => {
       if (
         error.code === "messaging/token-unsubscribed" ||

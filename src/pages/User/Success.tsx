@@ -30,8 +30,8 @@ const Success = () => {
 
       try {
         const responseData = await verifySubscription(sessionId);
-        console.log('API Response:', responseData); // Log the response for debugging
-        setSubscriptionDetails(responseData); // Store response data
+        console.log('API Response:', responseData); 
+        setSubscriptionDetails(responseData); 
         setLoading(false);
       } catch (err: any) {
         console.error('Error verifying subscription:', err);

@@ -76,7 +76,7 @@ const UserProfile = () => {
   const [user, setUser] = useState({ email: '', role: 'guest', username: '', joinDate: '', mobileNumber: '' });
   const [loadingUser, setLoadingUser] = useState(true);
   const [errorUser, setErrorUser] = useState<string | null>(null);
-  const { subscriptionPlan, loading, error } = useSubscriptionStatus();
+  const { subscriptionPlan, createdAt, expiresAt, loading, error } = useSubscriptionStatus();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -113,6 +113,16 @@ const UserProfile = () => {
 
   const handleUpgradeClick = () => {
     navigate('/user/subscription');
+  };
+
+  // Format date to a readable string
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Not available';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
   };
 
   return (
@@ -261,6 +271,42 @@ const UserProfile = () => {
                                   ? 'Access to all premium features with priority support'
                                   : 'Limited access with basic features'}
                               </Typography>
+                              {subscriptionPlan === 'premium' && (
+                                <>
+                                  <Box sx={{ mb: 3 }}>
+                                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                                      Subscription Started
+                                    </Typography>
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        p: 1.5,
+                                        borderRadius: 1,
+                                        bgcolor: 'rgba(255, 255, 255, 0.03)',
+                                      }}
+                                    >
+                                      <Typography variant="body1">{formatDate(createdAt)}</Typography>
+                                    </Box>
+                                  </Box>
+                                  <Box sx={{ mb: 3 }}>
+                                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                                      Subscription Expires
+                                    </Typography>
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        p: 1.5,
+                                        borderRadius: 1,
+                                        bgcolor: 'rgba(255, 255, 255, 0.03)',
+                                      }}
+                                    >
+                                      <Typography variant="body1">{formatDate(expiresAt)}</Typography>
+                                    </Box>
+                                  </Box>
+                                </>
+                              )}
                               <Box sx={{ mt: 2 }}>
                                 {subscriptionPlan === 'premium' ? (
                                   <>

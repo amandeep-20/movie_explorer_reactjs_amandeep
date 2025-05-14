@@ -100,11 +100,9 @@ const ManageTask: React.FC = () => {
             }
           } else {
             toast.error("Movie not found");
-            // navigate("/user/dashboard");
           }
         } catch (error) {
           toast.error("Failed to load movie data");
-          // navigate("/user/dashboard");
         }
       };
       fetchMovie();

@@ -77,12 +77,12 @@ const GetMovies = () => {
 
   const genres = [
     { id: 'all', name: 'All Movies' },
-    { id: 'Action', name: 'Action' },
-    { id: 'Comedy', name: 'Comedy' },
-    { id: 'Horror', name: 'Horror' },
-    { id: 'Thriller', name: 'Thriller' },
-    { id: 'Si-Fi', name: 'Si-Fi' },
-    { id: 'Romance', name: 'Romance' },
+    { id: 'action', name: 'Action' },
+    { id: 'comedy', name: 'Comedy' },
+    { id: 'horror', name: 'Horror' },
+    { id: 'thriller', name: 'Thriller' },
+    { id: 'sci-fi', name: 'Sci-Fi' },
+    { id: 'romance', name: 'Romance' },
   ];
 
   // Custom debounce function
@@ -503,7 +503,7 @@ const GetMovies = () => {
                   episode={item}
                   index={index}
                   role={role}
-                  subscriptionPlan={subscriptionPlan} // Pass subscriptionPlan to MovieItem
+                  subscriptionPlan={subscriptionPlan === 'premium' ? 'premium' : 'none'}
                   onDelete={handleDelete}
                 />
               ))

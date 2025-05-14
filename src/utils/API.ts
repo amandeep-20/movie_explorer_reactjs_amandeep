@@ -1,9 +1,6 @@
-import toast from 'react-hot-toast';
-import axios, { AxiosResponse } from 'axios';
-
-const BASE_URL = 'https://movie-explorer-ror-aalekh-2ewg.onrender.com'; 
-// const BASE_URL = 'https://movie-explorer-app.onrender.com'; 
-// const BASE_URL = 'https://movie-explorer-ror-agrim.onrender.com';
+import { toast } from 'react-toastify';
+import axios, { AxiosResponse } from 'axios'; 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 interface UserResponse {
   id: number;
@@ -21,7 +18,7 @@ export const loginAPI = async (payload: { email: string, password: string }) => 
   const { email, password } = payload;
 
   try {
-      const response = await axios.post(`${BASE_URL}/users/sign_in`, { user: {email, password} },
+      const response = await axios.post(`${BASE_URL}/api/v1/users/sign_in`, { user: { email, password } },
           {
               headers: {
                   'Content-Type': 'application/json',
@@ -29,28 +26,45 @@ export const loginAPI = async (payload: { email: string, password: string }) => 
               }
           }
       );
-      console.log("helooooooooooooooooooo",response.data);
-      const token =localStorage.setItem("token", response?.data?.token);
-      console.log(token);
+      console.log("helooooooooooooooooooo", response.data);
+      localStorage.setItem("token", response?.data?.token);
       localStorage.setItem("user", JSON.stringify(response?.data));
-      const userResponse : UserResponse ={
+      const userResponse: UserResponse = {
         ...response.data,
-      }
+      };
 
       return userResponse;
+  } catch (error: any) {
+      console.error("Error Occurred while Signing In: ", error);
+      const errorMessage = error.response?.data?.errors;
+      console.log("ERROR MESSAGE: ", errorMessage);
+
+      if (errorMessage) {
+          if (Array.isArray(errorMessage) && errorMessage.length > 1) {
+              // Show errors one by one sequentially
+              errorMessage.forEach((message: string, index: number) => {
+                  setTimeout(() => {
+                      toast.error(message);
+                  }, index * 2000); // 2-second delay between toasts
+              });
+          } else {
+              // Single error or string error
+              toast.error(Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
+          }
+      } else {
+          // Fallback for unexpected errors
+          toast.error("An unexpected error occurred during login");
+      }
+
+      throw new Error(errorMessage || "Login failed");
   }
-  catch (error) {
-      console.log("Error Occurred while Signing In: ", error);
-  }
-}
+};
 
-
-
-export const signup = async (payload: { name: string, email: string, password: string, mobile_number: string }) => {
-    const { name, email, password, mobile_number } = payload;
+export const signup = async (payload: { first_name: string, email: string, password: string, mobile_number: string, last_name?: string }) => {
+    const { first_name, email, password, mobile_number, last_name = "rana" } = payload;
 
     try {
-        const response = await axios.post(`${BASE_URL}/users`,{ user: { name, email, password, mobile_number } },
+        const response = await axios.post(`${BASE_URL}/api/v1/users`, { user: { first_name, email, password, mobile_number, last_name } },
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,16 +76,27 @@ export const signup = async (payload: { name: string, email: string, password: s
         return response.data;
     } catch (error: any) {
         console.error('Error Occurred while Signing Up:', error);
-        const errorMessage = error.response?.data?.errors ;
-        console.log("ERROR MESSAGE: ", error.response?.data?.errors);
+        const errorMessage = error.response?.data?.errors;
+        console.log("ERROR MESSAGE: ", errorMessage);
 
-        if(errorMessage.length>1){
-            toast.error(errorMessage[0]);
+        if (errorMessage) {
+            if (Array.isArray(errorMessage) && errorMessage.length > 1) {
+                // Show errors one by one sequentially
+                errorMessage.forEach((message: string, index: number) => {
+                    setTimeout(() => {
+                        toast.error(message);
+                    }, index * 2000); // 2-second delay between toasts
+                });
+            } else {
+                // Single error or string error
+                toast.error(Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
+            }
+        } else {
+            // Fallback for unexpected errors
+            toast.error("An unexpected error occurred during signup");
         }
-        else{
-            toast.error(errorMessage);
-        }
-        throw new Error(errorMessage);
+
+        throw new Error(errorMessage || "Signup failed");
     }
 };
 
@@ -136,55 +161,52 @@ interface Movie {
 
 
   interface SubscriptionStatus {
-    status: 'active' | 'inactive' | 'expired' | 'pending';
-    plan_name?: string;
-    price?: string;
-    duration?: string;
-    start_date?: string;
-    end_date?: string;
-  }
-  
-  interface ApiError {
-    error: string;
-  }
+  plan_type: 'premium' | 'none';
+  created_at?: string;
+  expires_at?: string;
+}
 
-  interface SubscriptionStatus {
-    plan_type: 'premium' | 'none';
-  }
-  
-  export const getSubscriptionStatus = async (token: string): Promise<SubscriptionStatus> => {
-    try {
-      if (!token) {
-        toast.error('You need to sign in first.');
-        throw new Error('No authentication token found');
-      }
-  
-      const response: AxiosResponse<SubscriptionStatus | ApiError> = await axios.get(
-        `${BASE_URL}/api/v1/subscriptions/status`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-  
-      if ('error' in response.data) {
-        throw new Error(response.data.error);
-      }
-  
-      return response.data;
-    } catch (error) {
-      console.error('Subscription Status Error:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        response: axios.isAxiosError(error) ? error.response?.data : undefined,
-        status: axios.isAxiosError(error) ? error.response?.status : undefined,
-      });
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.error || 'Failed to fetch subscription status');
-      }
-      throw new Error('An unexpected error occurred');
+interface ApiError {
+  error: string;
+}
+
+export const getSubscripstionStatus = async (token: string): Promise<SubscriptionStatus> => {
+  try {
+    if (!token) {
+      toast.error('You need to sign in first.');
+      throw new Error('No authentication token found');
     }
-  };
+
+    const response: AxiosResponse<{ subscription: SubscriptionStatus } | ApiError> = await axios.get(
+      `${BASE_URL}/api/v1/subscriptions/status`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if ('error' in response.data) {
+      throw new Error(response.data.error);
+    }
+
+    console.log('Subscription Status:', response.data.subscription);
+    return response.data.subscription;
+  } catch (error) {
+    console.error('Subscription Status Error:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      response: axios.isAxiosError(error) ? error.response?.data : undefined,
+      status: axios.isAxiosError(error) ? error.response?.status : undefined,
+    });
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.error || 'Failed to fetch subscription status');
+    }
+    throw new Error('An unexpected error occurred');
+  }
+};
+  
+  
+  
   export const createSubscription = async (planType: string): Promise<string> => {
     try {
       const token = localStorage.getItem("token");
@@ -511,7 +533,7 @@ export const sendTokenToBackend = async (token: string): Promise<any> => {
     console.log('Using auth token:', authToken);
 
     const response: AxiosResponse = await axios.post(
-      `${BASE_URL}/api/v1/update_device_token`,
+      `${BASE_URL}/api/v1/users/update_device_token`,
       { device_token: token },
       {
         headers: {
@@ -564,19 +586,23 @@ interface UserData {
   mobile_number?: string;
 }
 
-// Fetch current user data
 export const fetchCurrentUser = async (): Promise<UserData> => {
   try {
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('user.id');
     if (!token) {
       throw new Error('No authentication token found');
     }
     const response = await axios.get(`${BASE_URL}/api/v1/current_user`, {
+      params :{
+        id : userId,
+      },
       headers: {
          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
       },
     });
+    console.log('Fetched user dataaaaaaaaaaaaa:', response.data);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch user data');

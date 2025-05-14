@@ -71,7 +71,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre, role, onDelete }) => 
         const formattedMovies: Episode[] = movieArray.map((movie: Movie) => ({
           id: movie.id,
           title: movie.title || 'Untitled',
-          image: movie.poster_url || 'https://via.placeholder.com/200x300',
+          image: movie.poster_url || '',
           starRating: movie.rating || 0,
           year: movie.release_year || 0,
           duration: movie.duration
@@ -191,7 +191,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre, role, onDelete }) => 
           }}
         >
           See All
-        </Typography>
+        </Typography>  
       </Box>
       <Box position="relative">
         <Box
@@ -214,7 +214,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre, role, onDelete }) => 
               episode={item}
               index={index}
               role={role}
-              subscriptionPlan={subscriptionPlan} // Pass subscriptionPlan to MovieItem
+              subscriptionPlan={subscriptionPlan === 'premium' ? 'premium' : 'none'} 
               onDelete={handleDelete}
             />
           ))}

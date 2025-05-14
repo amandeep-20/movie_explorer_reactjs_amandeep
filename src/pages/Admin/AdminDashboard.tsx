@@ -65,8 +65,8 @@ const AdminDashboard: React.FC = () => {
           .map((movie: Movie) => ({
             id: movie.id,
             title: movie.title || 'Untitled',
-            image: movie.banner_url || 'https://via.placeholder.com/200x300',
-            image2: movie.poster_url || 'https://via.placeholder.com/200x300',
+            image: movie.banner_url || '',
+            image2: movie.poster_url || ' ',
             starRating: movie.rating || 0,
             year: movie.release_year || 0,
             duration: movie.duration

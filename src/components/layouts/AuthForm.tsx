@@ -8,12 +8,15 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { toast } from 'react-toastify';
 import AuthLayout from '../../components/layouts/AuthLayout';
-import { loginAPI, signup } from '../../utils/API';
+import { loginAPI, signup } from '../../utils/API'; // Import signup from api.ts
 import WithNavigation from '../common/WithNavigation';
 
+// AuthForm Component
 interface Errors {
   name?: string;
+  lastName?: string;
   email: string;
   phone?: string;
   password: string;
@@ -26,6 +29,7 @@ interface AuthFormProps {
 
 interface AuthFormState {
   name: string;
+  lastName: string;
   email: string;
   phone: string;
   password: string;
@@ -39,6 +43,7 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
     super(props);
     this.state = {
       name: '',
+      lastName: '',
       email: '',
       phone: '',
       password: '',
@@ -65,6 +70,10 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
     return name.trim().length > 0;
   };
 
+  validateLastName = (lastName: string): boolean => {
+    return lastName.trim().length > 0;
+  };
+
   validatePhone = (phone: string): boolean => {
     const regex = /^\+?[\d\s-]{10,}$/;
     return phone.trim().length === 0 || regex.test(phone);
@@ -73,12 +82,17 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { isSignup = false, navigate } = this.props;
-    const { name, email, phone, password } = this.state;
+    const { name, lastName, email, phone, password } = this.state;
     let newErrors: Errors = { email: '', password: '' };
     let isValid = true;
 
     if (isSignup && !this.validateName(name)) {
-      newErrors.name = 'Please enter your name';
+      newErrors.name = 'Please enter your first name';
+      isValid = false;
+    }
+
+    if (isSignup && !this.validateLastName(lastName)) {
+      newErrors.lastName = 'Please enter your last name';
       isValid = false;
     }
 
@@ -110,15 +124,21 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
       this.setState({ loading: true });
       try {
         const data = isSignup
-          ? await signup({ name, email, password, mobile_number: phone })
+          ? await signup({
+              first_name: name,
+              email,
+              password,
+              mobile_number: phone,
+              last_name: lastName,
+            })
           : await loginAPI({ email, password });
 
         if (!data) {
           throw new Error('No data returned from API');
         }
-    
+
         console.log(`${isSignup ? 'Sign-up' : 'Sign-in'} successful:`, data);
-        navigate(isSignup ? '/': '/user/dashboard')
+        navigate(isSignup ? '/' : '/user/dashboard');
       } catch (error: any) {
         console.error(`${isSignup ? 'Sign-up' : 'Sign-in'} failed:`, error.message);
         this.setState((prevState) => ({
@@ -168,7 +188,7 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
 
   render() {
     const { isSignup = false } = this.props;
-    const { name, email, phone, password, errors, showPassword, loading } = this.state;
+    const { name, lastName, email, phone, password, errors, showPassword, loading } = this.state;
 
     return (
       <AuthLayout>
@@ -188,12 +208,27 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
         <form onSubmit={this.handleSubmit} style={{ width: '100%' }}>
           {isSignup && (
             <TextField
-              placeholder="Name"
+              placeholder="First Name"
               type="text"
               value={name}
               onChange={(e) => this.setState({ name: e.target.value })}
               error={!!errors.name}
               helperText={errors.name}
+              fullWidth
+              variant="outlined"
+              sx={this.commonTextFieldStyles}
+              InputProps={{ style: { color: '#ffffff' } }}
+            />
+          )}
+
+          {isSignup && (
+            <TextField
+              placeholder="Last Name"
+              type="text"
+              value={lastName}
+              onChange={(e) => this.setState({ lastName: e.target.value })}
+              error={!!errors.lastName}
+              helperText={errors.lastName}
               fullWidth
               variant="outlined"
               sx={this.commonTextFieldStyles}
@@ -293,7 +328,7 @@ class AuthForm extends React.Component<AuthFormProps, AuthFormState> {
             sx={{
               fontSize: '0.875rem',
               color: 'rgba(255, 255, 255, 0.7)',
-              mt: 2,
+              Vickers: 2,
               textAlign: 'center',
             }}
           >
