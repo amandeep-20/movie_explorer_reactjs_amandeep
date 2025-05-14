@@ -7,7 +7,7 @@ import { getAllMovies, getMoviesByGenre, searchMoviesByTitle, deleteMovie } from
 import MovieItem from './MovieItem';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus'; // Import the hook
+import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus';
 
 interface Movie {
   id: number;
@@ -66,7 +66,7 @@ const GetMovies = () => {
     per_page: 10,
   });
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const { subscriptionPlan, loading: subscriptionLoading, error: subscriptionError } = useSubscriptionStatus(); // Use the hook
+  const { subscriptionPlan, loading: subscriptionLoading, error: subscriptionError } = useSubscriptionStatus();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -93,65 +93,68 @@ const GetMovies = () => {
     };
   };
 
-  const loadMovies = async (genre: string = 'all', page: number = 1, title: string = '') => {
-    setLoading(true);
-    setError(null);
-    try {
-      let movieData: MovieResponse;
-      if (title) {
-        console.log(`Searching movies with title: ${title}, page: ${page}`);
-        movieData = await searchMoviesByTitle(title, page, genre);
-      } else if (genre === 'all') {
-        console.log(`Fetching all movies, page: ${page}`);
-        movieData = await getAllMovies(page);
-      } else {
-        console.log(`Fetching movies for genre: ${genre}, page: ${page}`);
-        movieData = await getMoviesByGenre(genre, page);
-      }
+  const loadMovies = useCallback(
+    async (genre: string = 'all', page: number = 1, title: string = '') => {
+      setLoading(true);
+      setError(null);
+      try {
+        let movieData: MovieResponse;
+        if (title) {
+          console.log(`Searching movies with title: ${title}, page: ${page}`);
+          movieData = await searchMoviesByTitle(title, page, genre);
+        } else if (genre === 'all') {
+          console.log(`Fetching all movies, page: ${page}`);
+          movieData = await getAllMovies(page);
+        } else {
+          console.log(`Fetching movies for genre: ${genre}, page: ${page}`);
+          movieData = await getMoviesByGenre(genre, page);
+        }
 
-      console.log('Raw API response:', movieData);
+        console.log('Raw API response:', movieData);
 
-      const movieArray = movieData?.movies || [];
-      const paginationData = movieData?.pagination || {
-        current_page: page,
-        total_pages: 1,
-        total_count: movieArray.length,
-        per_page: 10,
-      };
+        const movieArray = movieData?.movies || [];
+        const paginationData = movieData?.pagination || {
+          current_page: page,
+          total_pages: 1,
+          total_count: movieArray.length,
+          per_page: 10,
+        };
 
-      if (Array.isArray(movieArray) && movieArray.length > 0) {
-        const formattedMovies: Episode[] = movieArray.map((movie: Movie) => ({
-          id: movie.id,
-          title: movie.title || 'Untitled',
-          image: movie.poster_url || 'https://via.placeholder.com/200x300',
-          starRating: movie.rating || 0,
-          year: movie.release_year || 0,
-          duration: movie.duration
-            ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m`
-            : '0h 0m',
-          date: new Date().toISOString().split('T')[0],
-          desc: movie.description || 'No description available',
-          director: movie.director || 'Unknown',
-          main_lead: movie.main_lead || 'Unknown',
-          streaming_platform: movie.streaming_platform || 'Unknown',
-          premium: movie.premium || false,
-        }));
-        console.log('Mapped movies:', formattedMovies);
-        setMovies(formattedMovies);
-        setPagination(paginationData);
-      } else {
-        console.log(`No movies found for ${title ? `title: ${title}` : `genre: ${genre}`}, page: ${page}`);
+        if (Array.isArray(movieArray) && movieArray.length > 0) {
+          const formattedMovies: Episode[] = movieArray.map((movie: Movie) => ({
+            id: movie.id,
+            title: movie.title || 'Untitled',
+            image: movie.poster_url || 'https://via.placeholder.com/200x300',
+            starRating: movie.rating || 0,
+            year: movie.release_year || 0,
+            duration: movie.duration
+              ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m`
+              : '0h 0m',
+            date: new Date().toISOString().split('T')[0],
+            desc: movie.description || 'No description available',
+            director: movie.director || 'Unknown',
+            main_lead: movie.main_lead || 'Unknown',
+            streaming_platform: movie.streaming_platform || 'Unknown',
+            premium: movie.premium || false,
+          }));
+          console.log('Mapped movies:', formattedMovies);
+          setMovies(formattedMovies);
+          setPagination(paginationData);
+        } else {
+          console.log(`No movies found for ${title ? `title: ${title}` : `genre: ${genre}`}, page: ${page}`);
+          setMovies([]);
+          setError('No movies available for this category');
+        }
+      } catch (error: any) {
+        console.error('Error loading movies:', error.message);
         setMovies([]);
-        setError('No movies available for this category');
+        setError('Failed to load movies');
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      console.error('Error loading movies:', error.message);
-      setMovies([]);
-      setError('Failed to load movies');
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    []
+  );
 
   const handleDelete = async (id: number) => {
     setDeleteLoading(true);
@@ -201,11 +204,11 @@ const GetMovies = () => {
 
   const debouncedSearch = useCallback(
     debounce((query: string, genre: string, page: number) => {
-      setPagination({ ...pagination, current_page: page });
+      setPagination((prev) => ({ ...prev, current_page: page }));
       setSearchParams({ page: page.toString() });
       loadMovies(genre, page, query);
     }, 3000),
-    [pagination, setSearchParams]
+    [setSearchParams, loadMovies]
   );
 
   useEffect(() => {
@@ -213,17 +216,18 @@ const GetMovies = () => {
     setPagination((prev) => ({ ...prev, current_page: pageFromUrl }));
     loadMovies(selectedGenre, pageFromUrl, searchQuery);
     window.scrollTo(0, 0);
-  }, [searchParams, selectedGenre]);
+  }, [searchParams, selectedGenre, searchQuery, loadMovies]);
 
   const handleGenreSelect = (genreId: string) => {
     setSelectedGenre(genreId);
-    setPagination({ ...pagination, current_page: 1 });
+    setSearchQuery(''); // Reset search query on genre change
+    setPagination((prev) => ({ ...prev, current_page: 1 }));
     setSearchParams({ page: '1' });
-    loadMovies(genreId, 1, searchQuery);
+    loadMovies(genreId, 1);
   };
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-    setPagination({ ...pagination, current_page: page });
+    setPagination((prev) => ({ ...prev, current_page: page }));
     setSearchParams({ page: page.toString() });
     loadMovies(selectedGenre, page, searchQuery);
   };
@@ -362,6 +366,7 @@ const GetMovies = () => {
               },
             }}
             aria-label="search"
+            data-testid="search-toggle-button"
           >
             <SearchIcon />
           </IconButton>
@@ -405,7 +410,12 @@ const GetMovies = () => {
                 onChange={handleSearchChange}
                 autoFocus
               />
-              <IconButton sx={{ p: '10px', color: '#E50914' }} aria-label="search" type="submit">
+              <IconButton
+                sx={{ p: '10px', color: '#E50914' }}
+                aria-label="search"
+                type="submit"
+                data-testid="search-submit-button"
+              >
                 <SearchIcon />
               </IconButton>
             </Paper>
@@ -502,7 +512,7 @@ const GetMovies = () => {
                   episode={item}
                   index={index}
                   role={role}
-                  subscriptionPlan={subscriptionPlan} // Pass subscriptionPlan to MovieItem
+                  subscriptionPlan={subscriptionPlan}
                   onDelete={handleDelete}
                 />
               ))
