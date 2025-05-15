@@ -170,7 +170,7 @@ export default function SubscriptionPage() {
                   gutterBottom
                   sx={{ color: themeColors.text }}
                 >
-                  Choose Your Movie Explorer Plan
+                  Choose Your FlimHunt Plan
                 </Typography>
                 <Typography variant="h6" color={themeColors.textSecondary}>
                   Unlock premium content with a subscription that fits your schedule

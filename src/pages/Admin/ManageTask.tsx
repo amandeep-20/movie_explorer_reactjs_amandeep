@@ -56,8 +56,8 @@ const ManageTask: React.FC = () => {
     mainLead: "",
     streamingPlatform: "",
     rating: "",
-    poster: new File([], ""), // placeholder empty File
-    banner: new File([], ""), // placeholder empty File
+    poster: new File([], ""), 
+    banner: new File([], ""), 
     isPremium: false,
   });
   const [posterPreview, setPosterPreview] = useState<string | null>(null);
@@ -87,8 +87,8 @@ const ManageTask: React.FC = () => {
               mainLead: movieData.main_lead || "",
               streamingPlatform: movieData.streaming_platform || "",
               rating: movieData.rating?.toString() || "",
-              poster: new File([], ""), // placeholder empty File
-              banner: new File([], ""), // placeholder empty File
+              poster: new File([], ""), 
+              banner: new File([], ""),
               isPremium: movieData.premium || false,
             });
             
@@ -136,26 +136,44 @@ const ManageTask: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true); // Disable button
-    try {
-      let movie;
-      if (isEditMode && id) {
-        movie = await updateMovie(Number(id), formData);
-        console.log("Movie updated:", movie);
-        if (movie) {
-          toast.success("Movie updated successfully!");
-        } else {
-          console.warn("updateMovie returned no movie");
-          toast.error("Failed to update movie.");
-        }
+  e.preventDefault();
+  setIsLoading(true); 
+  try {
+    let movie;
+    if (isEditMode && id) {
+      movie = await updateMovie(Number(id), formData);
+      console.log("Movie updated:", movie);
+      if (movie) {
+        toast.success("Movie updated successfully!");
       } else {
-        // Add mode: Clear form data after success
-        console.log("Submitting formData:", formData);
-        // Only call createMovie if poster and banner are selected
-        if (!formData.poster.name || !formData.banner.name) {
-          toast.error("Please upload both poster and banner images.");
-          setIsLoading(false);
+        console.warn("updateMovie returned no movie");
+        toast.error("Failed to update movie.");
+      }
+    } else {
+      console.log("Submitting formData:", formData);
+      if (!formData.poster.name || !formData.banner.name) {
+        toast.error("Please upload both poster and banner images.");
+        setFormData({
+          title: "",
+          genre: "",
+          releaseYear: "",
+          director: "",
+          duration: "",
+          description: "",
+          mainLead: "",
+          streamingPlatform: "",
+          rating: "",
+          poster: new File([], ""), 
+          banner: new File([], ""), 
+          isPremium: false,
+        });
+        setPosterPreview(null);
+        setBannerPreview(null);
+      } else {
+        movie = await createMovie(formData);
+        console.log("Movie created:", movie);
+        if (movie) {
+          toast.success("Movie added successfully!");
           setFormData({
             title: "",
             genre: "",
@@ -166,8 +184,8 @@ const ManageTask: React.FC = () => {
             mainLead: "",
             streamingPlatform: "",
             rating: "",
-            poster: new File([], ""), // placeholder empty File
-            banner: new File([], ""), // placeholder empty File
+            poster: new File([], ""), 
+            banner: new File([], ""), 
             isPremium: false,
           });
           setPosterPreview(null);
@@ -177,17 +195,18 @@ const ManageTask: React.FC = () => {
           toast.error("Failed to add movie.");
         }
       }
-    } catch (error) {
-      console.error("Error in handleSubmit:", error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred.");
-      }
-    } finally {
-      setIsLoading(false); 
     }
-  };
+  } catch (error) {
+    console.error("Error in handleSubmit:", error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("An unexpected error occurred.");
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleCancel = () => {
     navigate("/user/dashboard");
