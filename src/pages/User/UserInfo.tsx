@@ -98,7 +98,7 @@ const UserProfile = () => {
         setUser({
           email: data.email || '',
           role: ['user', 'supervisor', 'guest'].includes(data.role || '') ? data.role || 'guest' : 'guest',
-          username: data.name || '',
+          username: data.first_name || '',
           joinDate: data.join_date || '',
           mobileNumber: data.mobile_number || '',
         });
@@ -435,22 +435,6 @@ const UserProfile = () => {
                         >
                           {user.role === 'supervisor' ? 'Supervisor' : (user.role === 'user' ? 'User' : 'Guest')}
                         </Typography>
-                      </Box>
-                    </Box>
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        Member since
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          p: 1.5,
-                          borderRadius: 1,
-                          bgcolor: 'rgba(255, 255, 255, 0.03)',
-                        }}
-                      >
-                        <Typography variant="body1">{user.joinDate || 'Not available'}</Typography>
                       </Box>
                     </Box>
                     <Box sx={{ mb: 3 }}>

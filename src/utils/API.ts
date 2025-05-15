@@ -580,7 +580,7 @@ export const verifySubscription = async (sessionId: string) => {
 interface UserData {
   email?: string;
   role?: string;
-  name?: string;
+  first_name: string;
   join_date?: string;
   mobile_number?: string;
 }
