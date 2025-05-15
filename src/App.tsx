@@ -14,7 +14,7 @@ import SubscriptionPage from './pages/User/SubscriptionPage';
 import Success from "./pages/User/Success";
 import UserInfo from "./pages/User/UserInfo";
 import Header from "./components/common/Header"; 
-import { Cancel } from "@mui/icons-material";
+import Cancel from "./pages/User/Cancel";
 
 
 function AppContent() {
