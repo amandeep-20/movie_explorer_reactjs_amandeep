@@ -14,6 +14,7 @@ import SubscriptionPage from './pages/User/SubscriptionPage';
 import Success from "./pages/User/Success";
 import UserInfo from "./pages/User/UserInfo";
 import Header from "./components/common/Header"; 
+import { Cancel } from "@mui/icons-material";
 
 
 function AppContent() {
@@ -42,6 +43,7 @@ function AppContent() {
         <Route path="/" element={<Login />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
         {/* User */}
         <Route path="/user/viewMovieDetail/:id" element={<ViewMovieDetail />} />
         <Route path="/user/getMovies" element={<GetMovies />} />
