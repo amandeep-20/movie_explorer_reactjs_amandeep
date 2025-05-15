@@ -63,7 +63,6 @@ class BigSlider extends React.Component<BigSliderProps, BigSliderState> {
           maxHeight: "800px",
         }}
       >
-        {/* Slider container */}
         <Box
           sx={{
             height: "100%",
@@ -82,7 +81,6 @@ class BigSlider extends React.Component<BigSliderProps, BigSliderState> {
           ))}
         </Box>
 
-        {/* Navigation arrows */}
         <IconButton
           onClick={this.goToPrevSlide}
           sx={{

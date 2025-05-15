@@ -85,7 +85,6 @@ const GetMovies = () => {
     { id: 'romance', name: 'Romance' },
   ];
 
-  // Custom debounce function
   const debounce = <T extends (...args: any[]) => void>(func: T, delay: number) => {
     let timeoutId: NodeJS.Timeout;
     return (...args: Parameters<T>) => {
@@ -274,7 +273,7 @@ const GetMovies = () => {
           p: 3,
         }}
       >
-        <Header />
+        {/* <Header /> */}
         <Typography>{subscriptionError}</Typography>
         <Footer />
       </Box>
@@ -291,7 +290,7 @@ const GetMovies = () => {
         overflow: 'hidden',
       }}
     >
-      <Header />
+      {/* <Header /> */}
 
       {/* Subscription Banner for Non-Premium Users */}
       {subscriptionPlan !== 'premium' && (

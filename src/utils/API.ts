@@ -391,7 +391,7 @@ interface Movie {
 export const createMovie = async (formData: MovieFormData): Promise<Movie | null> => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Retrieved token:", token); // Debug log to check token value
+    console.log("Retrieved token:", token); 
     if (!token) {
       toast.error("You need to sign in first.");
       throw new Error("No authentication token found");
@@ -423,7 +423,7 @@ export const createMovie = async (formData: MovieFormData): Promise<Movie | null
       },
     });
 
-    const movie: Movie = response.data.movie;
+    const movie: Movie = response.data;
     console.log("Movie created successfully:", movie);
     return movie;
   } catch (error: any) {
@@ -470,7 +470,7 @@ export const updateMovie = async (id: number, formData: MovieFormData): Promise<
       },
     });
 
-    const movie: Movie = response.data.movie;
+    const movie: Movie = response.data;
     console.log("Movie updated successfully:", movie);
     return movie;
   } catch (error: any) {
@@ -498,7 +498,6 @@ export const deleteMovie = async (id: number): Promise<boolean> => {
     });
 
     console.log(`Movie with ID ${id} deleted successfully`);
-    toast.success("Movie deleted successfully!");
     return true;
   } catch (error: any) {
     console.error("Error deleting movie:", error.message, error.response?.data);

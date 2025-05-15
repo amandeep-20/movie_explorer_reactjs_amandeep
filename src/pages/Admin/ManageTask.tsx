@@ -15,7 +15,8 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import toast from "react-hot-toast";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { createMovie, updateMovie, getMoviesById } from "../../utils/API";
 import Header from "../../components/common/Header";
 import Footer from "../../components/common/Footer";
@@ -35,8 +36,8 @@ interface MovieFormData {
   mainLead: string;
   streamingPlatform: string;
   rating: string;
-  poster: File | null;
-  banner: File | null;
+  poster: File;
+  banner: File;
   isPremium: boolean;
 }
 
@@ -55,15 +56,14 @@ const ManageTask: React.FC = () => {
     mainLead: "",
     streamingPlatform: "",
     rating: "",
-    poster: null,
-    banner: null,
+    poster: new File([], ""), // placeholder empty File
+    banner: new File([], ""), // placeholder empty File
     isPremium: false,
   });
-  
   const [posterPreview, setPosterPreview] = useState<string | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); 
 
-  // Check authentication and fetch movie data for edit mode
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -87,8 +87,8 @@ const ManageTask: React.FC = () => {
               mainLead: movieData.main_lead || "",
               streamingPlatform: movieData.streaming_platform || "",
               rating: movieData.rating?.toString() || "",
-              poster: null,
-              banner: null,
+              poster: new File([], ""), // placeholder empty File
+              banner: new File([], ""), // placeholder empty File
               isPremium: movieData.premium || false,
             });
             
@@ -137,45 +137,58 @@ const ManageTask: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true); // Disable button
     try {
       let movie;
       if (isEditMode && id) {
         movie = await updateMovie(Number(id), formData);
+        console.log("Movie updated:", movie);
         if (movie) {
           toast.success("Movie updated successfully!");
+        } else {
+          console.warn("updateMovie returned no movie");
+          toast.error("Failed to update movie.");
         }
       } else {
-        movie = await createMovie(formData);
-        if (movie) {
-          toast.success("Movie added successfully!");
+        // Add mode: Clear form data after success
+        console.log("Submitting formData:", formData);
+        // Only call createMovie if poster and banner are selected
+        if (!formData.poster.name || !formData.banner.name) {
+          toast.error("Please upload both poster and banner images.");
+          setIsLoading(false);
+          setFormData({
+            title: "",
+            genre: "",
+            releaseYear: "",
+            director: "",
+            duration: "",
+            description: "",
+            mainLead: "",
+            streamingPlatform: "",
+            rating: "",
+            poster: new File([], ""), // placeholder empty File
+            banner: new File([], ""), // placeholder empty File
+            isPremium: false,
+          });
+          setPosterPreview(null);
+          setBannerPreview(null);
+        } else {
+          console.warn("createMovie returned no movie");
+          toast.error("Failed to add movie.");
         }
       }
-      if (movie) {
-        setFormData({
-          title: "",
-          genre: "",
-          releaseYear: "",
-          director: "",
-          duration: "",
-          description: "",
-          mainLead: "",
-          streamingPlatform: "",
-          rating: "",
-          poster: null,
-          banner: null,
-          isPremium: false,
-        });
-      }
     } catch (error) {
+      console.error("Error in handleSubmit:", error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
         toast.error("An unexpected error occurred.");
       }
+    } finally {
+      setIsLoading(false); 
     }
-};
-  
-  
+  };
+
   const handleCancel = () => {
     navigate("/user/dashboard");
   };
@@ -221,7 +234,7 @@ const ManageTask: React.FC = () => {
         flexDirection: "column",
       }}
     >
-      <Header />
+      {/* <Header /> */}
       <Box
         sx={{
           flex: 1,
@@ -244,7 +257,6 @@ const ManageTask: React.FC = () => {
             backdropFilter: "blur(10px)",
           }}
         >
-          {/* Top Accent Bar */}
           <Box 
             sx={{ 
               height: 6, 
@@ -285,7 +297,6 @@ const ManageTask: React.FC = () => {
             
             <form onSubmit={handleSubmit} style={{ width: "100%" }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
-                {/* Row 1: Title and Genre */}
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2.5 }}>
                   <Box sx={{ flex: 1 }}>
                     <TextField
@@ -327,7 +338,6 @@ const ManageTask: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* Row 2: Release Year, Duration, Rating */}
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2.5 }}>
                   <Box sx={{ flex: 1 }}>
                     <TextField
@@ -349,7 +359,7 @@ const ManageTask: React.FC = () => {
                       sx={textFieldStyle}
                     />
                   </Box>
-                  <Box sx={{ flex: 1 }}>
+                  <Box sx={{ flexed: 1 }}>
                     <TextField
                       fullWidth
                       label="Duration (minutes)"
@@ -392,7 +402,6 @@ const ManageTask: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* Row 3: Director and Main Lead */}
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2.5 }}>
                   <Box sx={{ flex: 1 }}>
                     <TextField
@@ -434,7 +443,6 @@ const ManageTask: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* Row 4: Streaming Platform */}
                 <Box>
                   <TextField
                     fullWidth
@@ -455,7 +463,6 @@ const ManageTask: React.FC = () => {
                   />
                 </Box>
 
-                {/* Row 5: Description */}
                 <Box>
                   <TextField
                     fullWidth
@@ -478,9 +485,7 @@ const ManageTask: React.FC = () => {
                   />
                 </Box>
                 
-                {/* Row 6: Poster and Banner */}
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2.5 }}>
-                  {/* Poster Upload */}
                   <Box sx={{ flex: 1 }}>
                     <Paper
                       elevation={6}
@@ -565,7 +570,6 @@ const ManageTask: React.FC = () => {
                     </Paper>
                   </Box>
                   
-                  {/* Banner Upload */}
                   <Box sx={{ flex: 1 }}>
                     <Paper
                       elevation={6}
@@ -650,7 +654,6 @@ const ManageTask: React.FC = () => {
                   </Box>
                 </Box>
                 
-                {/* Row 7: Premium Checkbox */}
                 <Box sx={{ mt: 1 }}>
                   <FormControlLabel
                     control={
@@ -693,6 +696,7 @@ const ManageTask: React.FC = () => {
                   type="submit"
                   variant="contained"
                   startIcon={<SaveIcon />}
+                  disabled={isLoading} // Disable button when loading
                   sx={{
                     bgcolor: "#E50914",
                     color: "#fff",
@@ -708,15 +712,21 @@ const ManageTask: React.FC = () => {
                       transform: "translateY(-2px)",
                       boxShadow: "0 6px 20px rgba(229, 9, 20, 0.7)",
                     },
+                    "&:disabled": {
+                      bgcolor: "#666",
+                      color: "#aaa",
+                      cursor: "not-allowed",
+                    },
                     transition: "all 0.2s ease",
                   }}
                 >
-                  {isEditMode ? "Update Movie" : "Create Movie"}
+                  {isLoading ? "Processing..." : isEditMode ? "Update Movie" : "Create Movie"}
                 </Button>
                 <Button
                   variant="outlined"
                   onClick={handleCancel}
                   startIcon={<ArrowBackIcon />}
+                  disabled={isLoading} // Optionally disable Cancel button too
                   sx={{
                     color: "#fff",
                     borderColor: "#00b7bf",
@@ -730,6 +740,11 @@ const ManageTask: React.FC = () => {
                       borderColor: "#00b7bf",
                       bgcolor: "rgba(0, 183, 191, 0.1)",
                     },
+                    "&:disabled": {
+                      borderColor: "#666",
+                      color: "#aaa",
+                      cursor: "not-allowed",
+                    },
                     transition: "all 0.2s ease",
                   }}
                 >
@@ -741,6 +756,7 @@ const ManageTask: React.FC = () => {
         </Paper>
       </Box>
       <Footer />
+      <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );
 };

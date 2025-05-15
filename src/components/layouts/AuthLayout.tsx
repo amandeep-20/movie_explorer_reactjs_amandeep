@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Container } from '@mui/material';
 import MovieIcon from '@mui/icons-material/Movie';
 import authImg from '../../../src/assets/images/loginbackground.jpg';
 
@@ -28,9 +28,9 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
           overflow: 'hidden',
+          position: 'relative',
         }}
       >
-        {/* Dark overlay without blur - matches the image better */}
         <Box
           sx={{
             position: 'absolute',
@@ -38,52 +38,108 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker overlay to match image
+            background: 'linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(17,17,51,0.9) 100%)',
+            backdropFilter: 'blur(5px)',
             zIndex: 1,
           }}
         />
         
-        {/* Logo Button - Optional based on your design needs */}
         <Button
           onClick={this.handleNavigate}
           sx={{
             position: 'absolute',
-            top: 16,
-            left: 16,
+            top: 24,
+            left: 24,
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: 'transparent',
-            borderRadius: '9999px',
-            px: 2,
-            py: 0.5,
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            borderRadius: '12px',
+            px: 2.5,
+            py: 1,
             zIndex: 2,
+            transition: 'all 0.3s ease',
+            border: '1px solid rgba(255,255,255,0.1)',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: 'rgba(30, 30, 70, 0.5)',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
             },
           }}
         >
-          <MovieIcon sx={{ fontSize: 32, color: '#ffffff', mr: 1 }} />
+          <MovieIcon 
+            sx={{ 
+              fontSize: 32, 
+              color: '#ff5e62', 
+              mr: 1,
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: 'rotate(10deg)'
+              }
+            }} 
+          />
           <Typography
             variant="h6"
-            sx={{ fontWeight: 'bold', color: '#ffffff' }}
+            sx={{ 
+              fontWeight: 'bold', 
+              color: '#ffffff',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+              letterSpacing: '0.5px'
+            }}
           >
             Movie Explorer
           </Typography>
         </Button>
         
-        {/* Content Container - Completely transparent */}
-        <Box
+        <Container
+          maxWidth="sm"
           sx={{
             zIndex: 2,
-            width: { xs: '90%', sm: '80%', md: '400px' },
             display: 'flex',
             flexDirection: 'column',
-            p: 2,
+            px: { xs: 2, sm: 4 },
+            py: { xs: 3, sm: 4 },
             mx: 'auto',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '16px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            position: 'relative',
+            overflow: 'hidden',
+            transition: 'transform 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-5px)',
+            },
           }}
         >
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '-50px',
+              right: '-50px',
+              width: '100px',
+              height: '100px',
+              borderRadius: '50%',
+              background: 'linear-gradient(45deg, #ff5e62 0%, #ff9966 100%)',
+              opacity: 0.2,
+            }}
+          />
+          
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '-30px',
+              left: '-30px',
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              background: 'linear-gradient(45deg, #614385 0%, #516395 100%)',
+              opacity: 0.2,
+            }}
+          />
+          
           {children}
-        </Box>
+        </Container>
       </Box>
     );
   }

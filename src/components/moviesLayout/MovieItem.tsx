@@ -49,7 +49,6 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode, index, role, subscriptio
       isNavigatingRef.current = true;
       console.log(`Clicked movie: ${episode.title} (ID: ${episode.id}, Premium: ${episode.premium}, Subscription: ${subscriptionPlan})`);
 
-      // Check if user is a guest
       const storedUser = localStorage.getItem('user');
       if (!storedUser) {
         console.log('Guest user detected, redirecting to login page');

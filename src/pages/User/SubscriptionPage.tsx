@@ -149,7 +149,7 @@ export default function SubscriptionPage() {
 
   return (
     <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
+      {/* <Header /> */}
       <Box
         sx={{
           flex: 1,

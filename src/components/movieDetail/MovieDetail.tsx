@@ -58,7 +58,6 @@ export interface Episode {
 const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
   const { subscriptionPlan, loading, error } = useSubscriptionStatus(); // Use the hook
 
-  // Format movie data into Episode type
   const episode: Episode = {
     id: movie.id,
     title: movie.title || 'Untitled',
@@ -79,8 +78,7 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
 
   const shortDesc = episode.desc.split('.')[0] + '.';
 
-  // Check if the movie is premium and the user is not subscribed
-  const isPremiumLocked = movie.premium && subscriptionPlan !== 'premium';
+  // const isPremiumLocked = movie.premium && subscriptionPlan !== 'premium';
 
   if (loading) {
     return (
@@ -100,7 +98,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
 
   return (
     <Box sx={{ bgcolor: 'rgb(20, 20, 30)', color: '#fff', minHeight: '100vh' }}>
-      {/* Hero Banner with Gradient Overlay */}
       <Box
       sx={{
         position: 'relative',
@@ -110,7 +107,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
         overflow: 'hidden',
       }}
     >
-      {/* Gradient Overlay */}
       <Box
         sx={{
           position: 'absolute',
@@ -124,7 +120,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
         }}
       />
       
-      {/* Background Image */}
       <Box
         component="img"
         src={episode.image}
@@ -137,7 +132,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
         loading="lazy"
       />
 
-      {/* Content Overlay */}
       <Container 
         maxWidth="lg" 
         sx={{ 
@@ -163,7 +157,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
             px: { xs: 2, sm: 3, md: 0 },
           }}
         >
-          {/* Poster Image */}
           <Box
             sx={{
               flex: { xs: '0 0 auto', md: '0 0 30%' },
@@ -192,7 +185,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
             />
           </Box>
 
-          {/* Text Content */}
           <Box 
             sx={{ 
               flex: { xs: '1 1 auto', md: '1 1 70%' },
@@ -200,7 +192,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
               width: '100%'
             }}
           >
-            {/* Title */}
             <Typography
               variant="h2"
               fontWeight="bold"
@@ -214,7 +205,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
               {episode.title}
             </Typography>
 
-            {/* Info Pills */}
             <Box
               sx={{
                 display: 'flex',
@@ -245,7 +235,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
               </Box>
             </Box>
 
-            {/* Description */}
             <Typography
               variant="subtitle1"
               sx={{
@@ -267,10 +256,8 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
       </Container>
     </Box>
 
-      {/* Main Content */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-          {/* Left Column - Details Section */}
           <Box
             sx={{
               width: { xs: '100%', md: '66.666%' },
@@ -278,7 +265,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
               mb: { xs: 4, md: 0 },
             }}
           >
-            {/* Cast & Production Section */}
             <Box
               sx={{
                 mb: 5,
@@ -407,7 +393,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
                 </Box>
             </Box>
 
-            {/* About Section */}
             <Typography variant="h4" fontWeight="bold" gutterBottom sx={{  fontSize: { xs: 30, sm: 30 } }}>
               About this Episode
             </Typography>
@@ -420,7 +405,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
 
             <Divider sx={{ my: 4, borderColor: 'rgba(255,255,255,0.1)' }} />
 
-            {/* Ratings Section */}
             <Box sx={{ mt: 4 }}>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
                 Ratings & Reviews
@@ -437,7 +421,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
             </Box>
           </Box>
 
-          {/* Right Column - Episode Info */}
           <Box
             sx={{
               width: { xs: '100%', md: '33.333%' },

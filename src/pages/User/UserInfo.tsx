@@ -23,6 +23,16 @@ import {
 import { useSubscriptionStatus } from '../../../src/components/hooks/useSubscriptionStatus';
 import { fetchCurrentUser } from '../../utils/API';
 
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+  interface PaletteOptions {
+    neutral?: PaletteOptions['primary'];
+  }
+}
+
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -31,6 +41,7 @@ const theme = createTheme({
     background: { default: '#121212', paper: '#1e1e1e' },
     text: { primary: '#ffffff', secondary: 'rgba(255, 255, 255, 0.7)' },
     error: { main: '#ff4d4d' },
+    neutral: { main: '#757575' }, 
   },
   components: {
     MuiPaper: {
@@ -64,7 +75,6 @@ const theme = createTheme({
   },
 });
 
-// Sidebar navigation items
 const navItems = [
   { icon: <DashboardIcon />, text: 'Dashboard', path: '/user/dashboard' },
   { icon: <Explore />, text: 'Explore', path: '/user/getMovies' },
@@ -115,7 +125,6 @@ const UserProfile = () => {
     navigate('/user/subscription');
   };
 
-  // Format date to a readable string
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'Not available';
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -128,7 +137,6 @@ const UserProfile = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-        {/* Sidebar Navigation */}
         <Box
           component="nav"
           sx={{
@@ -168,10 +176,8 @@ const UserProfile = () => {
           </Box>
         </Box>
 
-        {/* Main Content */}
         <Box sx={{ flexGrow: 1, overflow: 'auto', pb: 6 }}>
           <Container maxWidth="xl" sx={{ mt: 4 }}>
-            {/* Header with User Profile and Logout Button */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
               <Typography variant="h4" color="white" component="h1">
                 User Profile
@@ -262,7 +268,11 @@ const UserProfile = () => {
                             <Box sx={{ flex: 1 }}>
                               <Typography
                                 variant="h5"
-                                sx={{ color: 'secondary.main', fontWeight: 'bold', mb: 2 }}
+                                sx={{
+                                  color: subscriptionPlan === 'premium' ? 'secondary.main' : 'neutral.main',
+                                  fontWeight: 'bold',
+                                  mb: 2,
+                                }}
                               >
                                 {subscriptionPlan === 'premium' ? 'Premium' : 'Basic'}
                               </Typography>
@@ -326,15 +336,15 @@ const UserProfile = () => {
                                 ) : (
                                   <>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'secondary.main', mr: 2 }} />
+                                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'neutral.main', mr: 2 }} />
                                       <Typography variant="body2">Limited project creation</Typography>
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'secondary.main', mr: 2 }} />
+                                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'neutral.main', mr: 2 }} />
                                       <Typography variant="body2">Standard support</Typography>
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'secondary.main', mr: 2 }} />
+                                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'neutral.main', mr: 2 }} />
                                       <Typography variant="body2">Basic analytics</Typography>
                                     </Box>
                                   </>
@@ -357,18 +367,18 @@ const UserProfile = () => {
                                 </>
                               ) : (
                                 <>
-                                  <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'text.secondary', mb: 2 }}>
+                                  <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'neutral.main', mb: 2 }}>
                                     Active
                                   </Typography>
                                   <Button
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                     onClick={handleUpgradeClick}
                                     sx={{
-                                      bgcolor: 'secondary.main',
-                                      color: 'black',
+                                      bgcolor: 'primary.main',
+                                      color: 'white',
                                       fontWeight: 'bold',
-                                      '&:hover': { bgcolor: 'secondary.light' },
+                                      '&:hover': { bgcolor: 'primary.dark' },
                                     }}
                                   >
                                     Upgrade to Premium
@@ -383,7 +393,6 @@ const UserProfile = () => {
                   </Paper>
                 </Box>
 
-                {/* User Information Section */}
                 <Box sx={{ flex: 1, minWidth: 0 }}>
                   <Paper sx={{ p: 3, height: '100%' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>

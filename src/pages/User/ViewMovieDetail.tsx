@@ -87,7 +87,7 @@ const ViewMovieDetail: React.FC = () => {
   if (error || subscriptionError || !movie) {
     return (
       <Box sx={{ bgcolor: '#0a0a0a', color: '#fff', minHeight: '100vh', textAlign: 'center', p: 8 }}>
-        <Header />
+        {/* <Header /> */}
         <Typography variant="h4">{error || subscriptionError || 'Movie not found'}</Typography>
         <Footer />
       </Box>
@@ -99,7 +99,7 @@ const ViewMovieDetail: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: '#0a0a0a', color: '#fff', minHeight: '100vh' }}>
-      <Header />
+      {/* <Header /> */}
       <MoviesDetail movie={movie} />
       <Carousel title="Related Movies" genre={primaryGenre} role={role}  />
       <Footer />
