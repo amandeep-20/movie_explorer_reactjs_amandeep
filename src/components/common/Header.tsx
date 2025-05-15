@@ -722,11 +722,6 @@ const Header = () => {
                 '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.05)' },
               }}
             >
-              <ListItemIcon
-                sx={{ color: isActive('/admin/manageTask') ? '#E50914' : 'white', minWidth: '40px' }}
-              >
-                <PersonIcon />
-              </ListItemIcon>
             </ListItem>
           )}
         </List>
