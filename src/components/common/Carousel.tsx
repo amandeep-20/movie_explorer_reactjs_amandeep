@@ -181,7 +181,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre, role, onDelete }) => 
           color="#fff"
           sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}
         >
-          {title}
+          {title.charAt(0).toUpperCase() + title.slice(1)}
         </Typography>
         <Typography
           onClick={handleSeeAll}
