@@ -20,7 +20,7 @@ import Cancel from "./pages/User/Cancel";
 function AppContent() {
   const location = useLocation();
   
-  const hideHeaderPaths = ["/", "/signup", "/user/info"];
+  const hideHeaderPaths = ["/", "/signup", "/user/info", "/cancel", "/success"];
   
   const showHeader = !hideHeaderPaths.includes(location.pathname);
 
