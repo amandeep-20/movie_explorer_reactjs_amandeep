@@ -727,10 +727,6 @@ const Header = () => {
               >
                 <PersonIcon />
               </ListItemIcon>
-              <ListItemText
-                primary="Create New"
-                sx={{ color: isActive('/admin/manageTask') ? '#E50914' : 'white' }}
-              />
             </ListItem>
           )}
         </List>
