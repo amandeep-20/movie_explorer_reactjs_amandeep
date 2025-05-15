@@ -60,7 +60,15 @@ function App() {
   useEffect(() => {
     generateToken();
     onMessage(messaging, (payload) => {
-      console.log("Foreground message received:", payload);
+      console.log('Foreground message received:', payload);
+      if (Notification.permission === 'granted') {
+        const notificationTitle = payload.notification?.title || 'New Notification';
+        const notificationOptions = {
+          body: payload.notification?.body || 'You have a new message',
+          icon: payload.notification?.image || '/favicon.ico',
+        };
+        new Notification(notificationTitle, notificationOptions);
+      }
     });
   }, []);
 

@@ -86,7 +86,7 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
               letterSpacing: '0.5px'
             }}
           >
-            FlimHunt
+            FILMHUNT
           </Typography>
         </Button>
         

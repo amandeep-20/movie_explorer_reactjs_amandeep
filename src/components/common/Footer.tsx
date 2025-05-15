@@ -31,7 +31,7 @@ class Footer extends Component {
                 variant="h4"
                 sx={{ fontWeight: "bold", mb: 2, letterSpacing: "-0.025em" }}
               >
-                FlimHunt
+                FILMHUNT
               </Typography>
               <Typography variant="body2" sx={{ color: "#cbd5e0", lineHeight: 1.6 }}>
                 Your go-to platform for discovering movies, curated picks, and cinematic journeys.
@@ -114,7 +114,7 @@ class Footer extends Component {
             }}
           >
             <Typography variant="caption" sx={{ color: "#a0aec0" }}>
-              © {new Date().getFullYear()} FlimHunt. Built for movie enthusiasts.
+              © {new Date().getFullYear()} FILMHUNT. Built for movie enthusiasts.
             </Typography>
           </Box>
         </Container>

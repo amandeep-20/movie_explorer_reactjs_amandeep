@@ -322,7 +322,7 @@ const Header = () => {
               '&:hover': { color: '#E50914' },
             }}
           >
-            FlimHunt
+            FILMHUNT
           </Typography>
         </Button>
 
@@ -607,7 +607,7 @@ const Header = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <MovieIcon sx={{ color: '#E50914', mr: 1 }} />
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              FlimHunt
+              FILMHUNT
             </Typography>
           </Box>
           <IconButton onClick={toggleMobileMenu} sx={{ color: 'white' }}>

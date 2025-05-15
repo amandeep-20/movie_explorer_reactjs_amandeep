@@ -149,7 +149,7 @@ const UserProfile = () => {
         >
           <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Typography variant="h5" component="div" sx={{ color: 'white', fontWeight: 'bold' }}>
-              FlimHunt
+              FILMHUNT
             </Typography>
           </Box>
           <Divider />
