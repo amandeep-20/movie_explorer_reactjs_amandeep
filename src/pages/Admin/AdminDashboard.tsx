@@ -6,7 +6,7 @@ import Footer from "../../components/common/Footer";
 import Carousel from "../../components/common/Carousel";
 import BigSlider from "../../components/moviesLayout/BigSlider";
 import { Episode } from "../../../config/MoviesData";
-import { getAllMovies } from "../../utils/API";
+import { deleteMovie, getAllMovies } from "../../utils/API";
 import WithNavigation from "../../components/common/WithNavigation"; 
 interface Movie {
   id: number;
@@ -109,16 +109,16 @@ class AdminDashboard extends Component<Props, State> {
     }
   };
 
-  handleDelete = (id: number) => {
-    this.setState(
-      (prevState) => ({
-        topRatedMovies: prevState.topRatedMovies.filter((movie) => movie.id !== id),
-      }),
-      () => {
-        this.fetchTopRatedMovies(); 
-      }
-    );
-  };
+  handleDelete = async (id: number) => {
+  try {
+    await deleteMovie(id); 
+    this.setState((prevState) => ({
+      topRatedMovies: prevState.topRatedMovies.filter((movie) => movie.id !== id),
+    }));
+  } catch (err: any) {
+    console.error("Error deleting movie:", err.message);
+  }
+};
 
   render() {
     const { loading, error, topRatedMovies, carousels } = this.state;

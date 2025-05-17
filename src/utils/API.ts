@@ -502,7 +502,6 @@ export const deleteMovie = async (id: number): Promise<boolean> => {
   } catch (error: any) {
     console.error("Error deleting movie:", error.message, error.response?.data);
     const errorMessage = error.response?.data?.error || "Failed to delete movie";
-    toast.error(errorMessage);
     return false;
   }
 };

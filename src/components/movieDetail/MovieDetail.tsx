@@ -19,7 +19,7 @@ import StarIcon from '@mui/icons-material/Star';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import PersonIcon from '@mui/icons-material/Person';
 import TvIcon from '@mui/icons-material/Tv';
-import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus'; // Import the hook
+import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus'; 
 
 interface Movie {
   id: number;

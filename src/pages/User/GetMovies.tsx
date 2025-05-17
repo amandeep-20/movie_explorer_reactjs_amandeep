@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '../../components/common/Header';
@@ -8,7 +7,7 @@ import { getAllMovies, getMoviesByGenre, searchMoviesByTitle, deleteMovie } from
 import MovieItem from '../../components/moviesLayout/MovieItem';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useSubscriptionStatus } from '../../components/hooks/useSubscriptionStatus'; // Import the hook
+import { useSubscriptionStatus } from '../../components/hooks/useSubscriptionStatus';
 
 interface Movie {
   id: number;
@@ -58,7 +57,7 @@ const GetMovies = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationData>({
     current_page: 1,
@@ -67,7 +66,7 @@ const GetMovies = () => {
     per_page: 10,
   });
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const { subscriptionPlan, loading: subscriptionLoading, error: subscriptionError } = useSubscriptionStatus(); // Use the hook
+  const { subscriptionPlan, loading: subscriptionLoading, error: subscriptionError } = useSubscriptionStatus();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -123,7 +122,7 @@ const GetMovies = () => {
         const formattedMovies: Episode[] = movieArray.map((movie: Movie) => ({
           id: movie.id,
           title: movie.title || 'Untitled',
-          image: movie.poster_url || 'https://via.placeholder.com/200x300',
+          image: movie.poster_url || '',
           starRating: movie.rating || 0,
           year: movie.release_year || 0,
           duration: movie.duration
@@ -154,9 +153,9 @@ const GetMovies = () => {
   };
 
   const handleDelete = async (id: number) => {
-    setDeleteLoading(true);
+    setDeletingId(id);
+    const prevMovies = movies;
     try {
-      console.log(`Attempting to delete movie with id: ${id}`);
       const updatedMovies = movies.filter((movie) => movie.id !== id);
       setMovies(updatedMovies);
 
@@ -166,12 +165,12 @@ const GetMovies = () => {
 
       if (updatedMovies.length === 0 && pagination.current_page > 1) {
         newCurrentPage = pagination.current_page - 1;
-        setPagination((prev) => ({
-          ...prev,
+        setPagination({
           current_page: newCurrentPage,
           total_count: newTotalCount,
           total_pages: newTotalPages,
-        }));
+          per_page: pagination.per_page,
+        });
         setSearchParams({ page: newCurrentPage.toString() });
         await loadMovies(selectedGenre, newCurrentPage, searchQuery);
       } else {
@@ -182,20 +181,19 @@ const GetMovies = () => {
         }));
       }
 
-      const success = await deleteMovie(id);
-      if (!success) {
-        console.error('Failed to delete movie, refetching to restore state');
-        setError('Failed to delete movie');
-        await loadMovies(selectedGenre, newCurrentPage, searchQuery);
-      } else {
-        console.log(`Successfully deleted movie with id: ${id}`);
-      }
+      await deleteMovie(id);
+      console.log(`Successfully deleted movie with id: ${id}`);
     } catch (error: any) {
       console.error('Error deleting movie:', error.message);
       setError('Failed to delete movie');
-      await loadMovies(selectedGenre, pagination.current_page, searchQuery);
+      setMovies(prevMovies);
+      setPagination((prev) => ({
+        ...prev,
+        total_count: prev.total_count,
+        total_pages: Math.ceil(prev.total_count / prev.per_page),
+      }));
     } finally {
-      setDeleteLoading(false);
+      setDeletingId(null);
     }
   };
 
@@ -273,7 +271,6 @@ const GetMovies = () => {
           p: 3,
         }}
       >
-        {/* <Header /> */}
         <Typography>{subscriptionError}</Typography>
         <Footer />
       </Box>
@@ -290,9 +287,6 @@ const GetMovies = () => {
         overflow: 'hidden',
       }}
     >
-      {/* <Header /> */}
-
-      {/* Subscription Banner for Non-Premium Users */}
       {subscriptionPlan !== 'premium' && (
         <Alert
           severity="info"
@@ -454,7 +448,7 @@ const GetMovies = () => {
         </Box>
       </Box>
 
-      {loading || deleteLoading ? (
+      {loading ? (
         <Box
           sx={{
             display: 'flex',
@@ -493,17 +487,20 @@ const GetMovies = () => {
               p: 2,
               maxWidth: '100%',
               mx: 'auto',
+              transition: 'opacity 0.3s ease',
+              opacity: loading ? 0.5 : 1,
             }}
           >
             {movies.length > 0 ? (
-              movies.map((item, index) => (
+              movies.map((item) => (
                 <MovieItem
                   key={item.id}
                   episode={item}
-                  index={index}
+                  index={item.id}
                   role={role}
                   subscriptionPlan={subscriptionPlan === 'premium' ? 'premium' : 'none'}
                   onDelete={handleDelete}
+                  isDeleting={deletingId === item.id}
                 />
               ))
             ) : (
@@ -551,4 +548,5 @@ const GetMovies = () => {
   );
 };
 
-export default GetMovies;
+export default React.memo(GetMovies);
+

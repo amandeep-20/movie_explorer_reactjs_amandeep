@@ -32,7 +32,6 @@ export default function SubscriptionPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Use the subscription status hook
   const { subscriptionPlan, loading, error: subscriptionError } = useSubscriptionStatus();
   const hasActiveSubscription = subscriptionPlan === 'premium';
 
@@ -106,12 +105,12 @@ export default function SubscriptionPage() {
   };
 
   const themeColors = {
-    background: '#0a1929',
-    cardBg: '#132f4c',
-    cardBgSelected: '#173d5f',
-    primary: '#66b2ff',
-    secondary: '#4dabf5',
-    accent: '#1e88e5',
+    background: 'rgb(20, 20, 30)',
+    cardBg: '#000000',
+    cardBgSelected: '#1a1a1a',
+    primary: '#ff0000', // Red for buttons
+    secondary: '#cc0000', // Slightly darker red for hover
+    accent: '#ff3333', // Lighter red for other accents
     text: '#ffffff',
     textSecondary: 'rgba(255, 255, 255, 0.7)',
     success: '#4caf50',
@@ -121,7 +120,7 @@ export default function SubscriptionPage() {
   if (loading) {
     return (
       <Box sx={{ bgcolor: themeColors.background, minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgress sx={{ color: 'error.main' }} />
+        <CircularProgress sx={{ color: themeColors.primary }} />
       </Box>
     );
   }
@@ -136,8 +135,8 @@ export default function SubscriptionPage() {
           variant="contained"
           onClick={() => window.location.reload()}
           sx={{
-            bgcolor: themeColors.accent,
-            '&:hover': { bgcolor: themeColors.primary },
+            bgcolor: themeColors.primary,
+            '&:hover': { bgcolor: themeColors.secondary },
             fontWeight: 'bold',
           }}
         >
@@ -154,7 +153,7 @@ export default function SubscriptionPage() {
         sx={{
           flex: 1,
           py: 6,
-          backgroundImage: 'linear-gradient(to bottom, rgba(10, 25, 41, 0.8), rgba(10, 25, 41, 0.95)), url(/images/cinema-bg.jpg)',
+          backgroundImage: 'linear-gradient(to bottom, rgba(20, 20, 30, 0.8), rgba(20, 20, 30, 0.95)), url(/images/cinema-bg.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -178,7 +177,7 @@ export default function SubscriptionPage() {
               </>
             ) : (
               <Typography variant="h5"
-                  component="h1" sx={{fontSize: { xs: '1rem', sm: '1rem', md: '1.6rem' }}}  color={themeColors.primary}>
+                  component="h1" sx={{fontSize: { xs: '1rem', sm: '1rem', md: '1.6rem' }, color: themeColors.primary}}>
                 You currently have an active subscription. Please wait until it expires to select a new plan.
               </Typography>
             )}
@@ -190,10 +189,6 @@ export default function SubscriptionPage() {
             justifyContent: 'center',
             mb: 6,
             gap: 3,
-            '@media (max-width: 900px)': {
-              flexDirection: 'column',
-              alignItems: 'center',
-            },
           }}>
             {plans.map((plan) => (
               <Card
@@ -209,11 +204,11 @@ export default function SubscriptionPage() {
                   color: themeColors.text,
                   borderRadius: 2,
                   overflow: 'visible',
-                  border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'basic',
+                  border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'none',
                   '&:hover': {
-                    transform: hasActiveSubscription ? 'basic' : 'translateY(-5px)',
+                    transform: hasActiveSubscription ? 'none' : 'translateY(-5px)',
                     boxShadow: hasActiveSubscription
-                      ? 'basic'
+                      ? 'none'
                       : `0 10px 20px rgba(0,0,0,0.2), 0 0 0 2px ${themeColors.primary}30`,
                   },
                 }}
@@ -239,7 +234,7 @@ export default function SubscriptionPage() {
                   <Typography variant="body2" color={themeColors.textSecondary} gutterBottom>
                     {plan.duration}
                   </Typography>
-                  <Typography variant="h4" component="div" fontWeight="bold" sx={{ my: 2, color: themeColors.primary }}>
+                  <Typography variant="h4" component="div" fontWeight="bold" sx={{ my: 2,  }}>
                     {plan.price}
                   </Typography>
                   <List dense sx={{ mb: 2 }}>
@@ -267,7 +262,7 @@ export default function SubscriptionPage() {
                     disabled={hasActiveSubscription}
                     sx={{
                       bgcolor: selectedPlan === plan.id ? themeColors.primary : 'transparent',
-                      color: selectedPlan === plan.id ? '#000' : themeColors.primary,
+                      color: selectedPlan === plan.id ? '#fff' : themeColors.primary,
                       borderColor: themeColors.primary,
                       '&:hover': {
                         bgcolor: selectedPlan === plan.id ? themeColors.secondary : `${themeColors.primary}20`,
@@ -278,7 +273,7 @@ export default function SubscriptionPage() {
                         color: 'rgba(255, 255, 255, 0.3)',
                         borderColor: 'rgba(255, 255, 255, 0.3)',
                       },
-                      textTransform: 'basic',
+                      textTransform: 'none',
                       fontWeight: 'bold',
                       fontSize: '1rem',
                       py: 1,
@@ -325,8 +320,8 @@ export default function SubscriptionPage() {
                   onClick={handleSubscribe}
                   sx={{
                     py: 1.5,
-                    bgcolor: themeColors.accent,
-                    '&:hover': { bgcolor: themeColors.primary },
+                    bgcolor: themeColors.primary,
+                    '&:hover': { bgcolor: themeColors.secondary },
                     fontWeight: 'bold',
                     fontSize: '1.1rem',
                     boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
@@ -343,9 +338,6 @@ export default function SubscriptionPage() {
                     </Box>
                   )}
                 </Button>
-                <Typography variant="body2" color={themeColors.textSecondary} align="center" sx={{ mt: 2 }}>
-                  You can cancel your subscription at any time from your account settings
-                </Typography>
               </Paper>
             </Box>
           )}
