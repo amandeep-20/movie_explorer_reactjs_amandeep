@@ -108,7 +108,7 @@ const Success = () => {
                   <Typography variant="h5" color="white" gutterBottom>
                     Verifying Your Subscription
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" align="center">
+                  <Typography variant="body1" color="white" align="center">
                     Please wait while we confirm your payment details...
                   </Typography>
                 </Box>
@@ -220,7 +220,7 @@ const Success = () => {
                     <Typography variant="h6" color="white" gutterBottom>
                       What's Next?
                     </Typography>
-                    <Typography variant="body1"  paragraph sx={{ mb: 4 }}>
+                    <Typography variant="body1" color="white"  paragraph sx={{ mb: 4 }}>
                       You now have full access to our premium content. Start exploring our vast library of movies and shows!
                     </Typography>
                     <Button
