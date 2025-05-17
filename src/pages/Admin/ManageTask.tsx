@@ -14,6 +14,8 @@ import {
   Tooltip,
   IconButton,
   Stack,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -337,23 +339,29 @@ const ManageTask: React.FC = () => {
                     />
                   </Box>
                   <Box sx={{ flex: 1 }}>
-                    <TextField
-                      fullWidth
-                      label="Genre"
-                      name="genre"
-                      value={formData.genre}
-                      onChange={handleChange}
-                      variant="outlined"
-                      required
-                      placeholder="e.g., Action, Drama, Comedy"
-                      InputProps={{
-                        sx: { 
+                    <FormControl fullWidth required sx={textFieldStyle}>
+                      <InputLabel sx={{ color: "rgba(255, 255, 255, 0.8)" }}>Genre</InputLabel>
+                      <Select
+                        name="genre"
+                        value={formData.genre}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, genre: e.target.value }))
+                        }
+                        label="Genre"
+                        sx={{
+                          color: "#fff",
                           backgroundColor: "rgba(0,0,0,0.2)",
                           backdropFilter: "blur(5px)",
-                        }
-                      }}
-                      sx={textFieldStyle}
-                    />
+                        }}
+                      >
+                        <MenuItem value="action">Action</MenuItem>
+                        <MenuItem value="horror">Horror</MenuItem>
+                        <MenuItem value="comedy">Comedy</MenuItem>
+                        <MenuItem value="romance">Romance</MenuItem>
+                        <MenuItem value="sci-fi">Sci-Fi</MenuItem>
+                      </Select>
+                    </FormControl>
+
                   </Box>
                 </Box>
 
