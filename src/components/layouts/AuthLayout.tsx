@@ -39,7 +39,6 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
             width: '100%',
             height: '100%',
             background: 'linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(17,17,51,0.9) 100%)',
-            backdropFilter: 'blur(5px)',
             zIndex: 1,
           }}
         />
@@ -100,7 +99,7 @@ class AuthLayout extends React.Component<AuthLayoutProps> {
             py: { xs: 3, sm: 4 },
             mx: 'auto',
             backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(16px)',
+            backdropFilter: 'blur(2px)',
             borderRadius: '16px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
