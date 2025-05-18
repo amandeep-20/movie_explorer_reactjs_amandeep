@@ -47,7 +47,7 @@ class Footer extends Component {
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
                 <Link
-                  href="/"
+                  href="/user/getMovies"
                   color="inherit"
                   underline="hover"
                   sx={{ color: "#cbd5e0", "&:hover": { color: "#4fd1c5" } }}
@@ -55,15 +55,7 @@ class Footer extends Component {
                   Discover
                 </Link>
                 <Link
-                  href="/movies"
-                  color="inherit"
-                  underline="hover"
-                  sx={{ color: "#cbd5e0", "&:hover": { color: "#4fd1c5" } }}
-                >
-                  Watchlist
-                </Link>
-                <Link
-                  href="/genres"
+                  href="/user/getMovies"
                   color="inherit"
                   underline="hover"
                   sx={{ color: "#cbd5e0", "&:hover": { color: "#4fd1c5" } }}
@@ -71,7 +63,7 @@ class Footer extends Component {
                   Categories
                 </Link>
                 <Link
-                  href="/connect"
+                  href="#"
                   color="inherit"
                   underline="hover"
                   sx={{ color: "#cbd5e0", "&:hover": { color: "#4fd1c5" } }}

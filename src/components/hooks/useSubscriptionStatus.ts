@@ -5,7 +5,7 @@ import { getSubscripstionStatus } from '../../utils/API';
 type SubscriptionPlan = 'premium' | 'none';
 interface SubscriptionStatusResponse {
   plan_type: SubscriptionPlan;
-  created_at?: string;
+  updated_at?: string;
   expires_at?: string;
 }
 
@@ -31,7 +31,7 @@ export const useSubscriptionStatus = () => {
       try {
         const status: SubscriptionStatusResponse = await getSubscripstionStatus(token);
         setSubscriptionPlan(status.plan_type);
-        setCreatedAt(status.created_at || null);
+        setCreatedAt(status.updated_at || null);
         setExpiresAt(status.expires_at || null);
       } catch (err: any) {
         console.error('Error fetching subscription status:', err.message);
