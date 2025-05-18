@@ -79,7 +79,6 @@ const GetMovies = () => {
     { id: 'action', name: 'Action' },
     { id: 'comedy', name: 'Comedy' },
     { id: 'horror', name: 'Horror' },
-    { id: 'thriller', name: 'Thriller' },
     { id: 'sci-fi', name: 'Sci-Fi' },
     { id: 'romance', name: 'Romance' },
   ];

@@ -32,6 +32,9 @@ const Header = () => {
   const [email, setEmail] = useState('');
   const [membershipType, setMembershipType] = useState('basic');
   const [notificationCount, setNotificationCount] = useState(0);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   interface Notification {
     id: number;
     message: string;
@@ -48,6 +51,23 @@ const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { subscriptionPlan, loading: subscriptionLoading } = useSubscriptionStatus();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 100) {
+        setIsHeaderVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   useEffect(() => {
     try {
@@ -266,7 +286,8 @@ const Header = () => {
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
         py: 0.5,
         px: { xs: 1, md: 2 },
-        transition: 'all 0.3s ease',
+        transition: 'transform 0.3s ease',
+        transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

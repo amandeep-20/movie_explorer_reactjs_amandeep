@@ -144,6 +144,7 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode, index, role, subscriptio
       const success = await deleteMovie(episode.id);
       if (success && onDelete) {
         onDelete(episode.id);
+        console.log(`Movie deleted successfully: ${episode.title} (ID: ${episode.id})`);
         toast.success('Movie deleted successfully');
       } else {
         toast.error('Failed to delete movie');

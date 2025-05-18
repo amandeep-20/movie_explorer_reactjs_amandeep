@@ -471,23 +471,26 @@ const ManageTask: React.FC = () => {
                 </Box>
 
                 <Box>
-                  <TextField
-                    fullWidth
-                    label="Streaming Platform"
-                    name="streamingPlatform"
-                    value={formData.streamingPlatform}
-                    onChange={handleChange}
-                    variant="outlined"
-                    required
-                    placeholder="e.g., Netflix, Prime Video, Disney+"
-                    InputProps={{
-                      sx: { 
+                  <FormControl fullWidth required sx={textFieldStyle}>
+                    <InputLabel sx={{ color: "rgba(255, 255, 255, 0.8)" }}>Streaming Platform</InputLabel>
+                    <Select
+                      name="streamingPlatform"
+                      value={formData.streamingPlatform}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, streamingPlatform: e.target.value }))
+                      }
+                      label="Streaming Platform"
+                      sx={{
+                        color: "#fff",
                         backgroundColor: "rgba(0,0,0,0.2)",
                         backdropFilter: "blur(5px)",
-                      }
-                    }}
-                    sx={textFieldStyle}
-                  />
+                      }}
+                    >
+                      <MenuItem value="Netflix">Netflix</MenuItem>
+                      <MenuItem value="Amazon Prime">Amazon Prime</MenuItem>
+                      <MenuItem value="Disney+">Disney+</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Box>
 
                 <Box>

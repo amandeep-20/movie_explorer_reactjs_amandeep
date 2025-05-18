@@ -360,6 +360,7 @@ const UserProfile = () => {
                                   <Button
                                     variant="outlined"
                                     color="secondary"
+                                    onClick={handleUpgradeClick}
                                     sx={{ borderWidth: 2, '&:hover': { borderWidth: 2 } }}
                                   >
                                     Subscription Active
