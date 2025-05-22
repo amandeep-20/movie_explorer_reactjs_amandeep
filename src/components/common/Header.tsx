@@ -45,7 +45,6 @@ const Header = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -146,9 +145,7 @@ const Header = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const toggleSearch = () => {
-    setSearchOpen(!searchOpen);
-  };
+  
 
   const isActive = (path: string): boolean => {
     return location.pathname === path;
@@ -582,33 +579,7 @@ const Header = () => {
         </Box>
       </Toolbar>
 
-      <Collapse in={searchOpen}>
-        <Box sx={{ p: 2, bgcolor: 'rgba(18, 18, 40, 0.95)' }}>
-          <Box
-            component="input"
-            sx={{
-              width: '100%',
-              p: 1.5,
-              borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
-              color: 'white',
-              fontSize: '1rem',
-              outline: 'none',
-              transition: 'all 0.3s ease',
-              '&:focus': {
-                border: '1px solid #E50914',
-                boxShadow: '0 0 0 2px rgba(229, 9, 20, 0.2)',
-              },
-              '&::placeholder': {
-                color: 'rgba(255, 255, 255, 0.5)',
-              },
-            }}
-            placeholder="Search for movies, shows, genres..."
-            autoFocus
-          />
-        </Box>
-      </Collapse>
+      
 
       <Drawer
         anchor="left"

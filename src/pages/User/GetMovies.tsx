@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
-import { Box, Typography, Chip, Paper, InputBase, IconButton, CircularProgress, Pagination, Collapse, Alert } from '@mui/material';
+import { Box, Typography, Chip, Paper, InputBase, IconButton, CircularProgress, Pagination, Collapse, Alert, List, ListItem, ListItemText } from '@mui/material';
 import { getAllMovies, getMoviesByGenre, searchMoviesByTitle, deleteMovie } from '../../utils/API';
 import MovieItem from '../../components/moviesLayout/MovieItem';
 import SearchIcon from '@mui/icons-material/Search';
@@ -56,6 +56,7 @@ const GetMovies = () => {
   const [movies, setMovies] = useState<Episode[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -151,6 +152,28 @@ const GetMovies = () => {
     }
   };
 
+  const fetchSuggestions = async (query: string) => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+    try {
+      const movieData: MovieResponse = await searchMoviesByTitle(query, 1, selectedGenre);
+      const movieTitles = movieData?.movies?.map((movie: Movie) => movie.title) || [];
+      setSuggestions(movieTitles.slice(0, 5));
+    } catch (error: any) {
+      console.error('Error fetching suggestions:', error.message);
+      setSuggestions([]);
+    }
+  };
+
+  const debouncedFetchSuggestions = useCallback(
+    debounce((query: string) => {
+      fetchSuggestions(query);
+    }, 500),
+    [selectedGenre]
+  );
+
   const handleDelete = async (id: number) => {
     setDeletingId(id);
     const prevMovies = movies;
@@ -196,6 +219,13 @@ const GetMovies = () => {
     }
   };
 
+  // Immediate search function (no debounce)
+  const triggerSearch = (query: string, genre: string, page: number) => {
+    setPagination({ ...pagination, current_page: page });
+    setSearchParams({ page: page.toString(), genre });
+    loadMovies(genre, page, query);
+  };
+
   const debouncedSearch = useCallback(
     debounce((query: string, genre: string, page: number) => {
       setPagination({ ...pagination, current_page: page });
@@ -208,8 +238,7 @@ const GetMovies = () => {
   useEffect(() => {
     const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
     const genreFromUrl = searchParams.get('genre') || 'all';
-    
-    // Validate genreFromUrl against available genres
+
     const validGenre = genres.some(genre => genre.id === genreFromUrl) ? genreFromUrl : 'all';
     setSelectedGenre(validGenre);
     setPagination((prev) => ({ ...prev, current_page: pageFromUrl }));
@@ -233,16 +262,27 @@ const GetMovies = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    debouncedSearch(query, selectedGenre, 1);
+    debouncedSearch(query, selectedGenre, 1); // Debounced search while typing
+    debouncedFetchSuggestions(query); // Fetch suggestions as the user types
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchQuery(suggestion);
+    setSuggestions([]); // Clear suggestions after selection
+    triggerSearch(suggestion, selectedGenre, 1); // Immediate search on suggestion click
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    debouncedSearch(searchQuery, selectedGenre, 1);
+    setSuggestions([]); // Clear suggestions on submit
+    triggerSearch(searchQuery, selectedGenre, 1); // Immediate search on Enter
   };
 
   const toggleSearch = () => {
     setSearchOpen(!searchOpen);
+    if (searchOpen) {
+      setSuggestions([]); // Clear suggestions when closing the search bar
+    }
   };
 
   if (subscriptionLoading) {
@@ -366,14 +406,14 @@ const GetMovies = () => {
         </Box>
 
         <Collapse in={searchOpen}>
-          <Box sx={{ p: 2, bgcolor: 'rgba(18, 18, 40, 0.95)' }}>
+          <Box sx={{ position: 'relative', p: 2, bgcolor: 'rgba(18, 18, 40, 0.95)' }}>
             <Paper
               component="form"
               sx={{
                 width: '100%',
                 p: 1.5,
                 borderRadius: '8px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                border: '1px solid rgba(255, 255, 251, 0.2)',
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
                 color: 'white',
                 fontSize: '1rem',
@@ -407,6 +447,41 @@ const GetMovies = () => {
                 <SearchIcon />
               </IconButton>
             </Paper>
+
+            {suggestions.length > 0 && (
+              <Paper
+                sx={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  mt: 1,
+                  bgcolor: '#fff',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  zIndex: 1000,
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                }}
+              >
+                <List>
+                  {suggestions.map((suggestion, index) => (
+                    <ListItem
+                      key={index}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          bgcolor: 'rgba(0, 0, 0, 0.05)',
+                        },
+                      }}
+                    >
+                      <ListItemText primary={suggestion} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            )}
           </Box>
         </Collapse>
 
