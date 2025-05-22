@@ -16,7 +16,6 @@ export const messaging = getMessaging(app);
 
 export const generateToken = async () => {
   try {
-    // Check if permission is already granted
     if (Notification.permission === "granted") {
       // const vapidKey = "BB-kLe4vRvnBrHpgtnGuaVLdXTLRKbxJMmX3Ja7Tw92tW9NDKoGzQW1WXZDOII2ObL_bjPzBQvLOL9L6PnkbYxw";
       const vapidKey = "BBbMH-bPmaNatLYbh_FIRM4KJr9fpulK_dAUgK73FCOpOErYrf0QN-W-G3GxOzZ2jT6v8O5keE3CsXDA1Nj_sH8";
@@ -33,7 +32,6 @@ export const generateToken = async () => {
       }
     }
 
-    // Request permission if not granted
     if (Notification.permission !== "granted") {
       const permission = await Notification.requestPermission();
       console.log("Notification permission:", permission);

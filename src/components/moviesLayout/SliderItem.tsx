@@ -39,13 +39,6 @@ class SliderItem extends React.Component<SliderItemProps> {
     }
   };
 
-  // handleEditClick = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-  //   const { navigate, episode } = this.props;
-  //   if (navigate) {
-  //     navigate(`/admin/editMovie/${episode.id}`);
-  //   }
-  // };
 
   render() {
     const { episode, isActive } = this.props;

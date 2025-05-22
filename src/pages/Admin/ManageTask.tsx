@@ -16,7 +16,7 @@ import {
   Stack,
   Select,
   MenuItem,
-  Autocomplete, // Add Autocomplete import
+  Autocomplete, 
 } from "@mui/material";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,7 +29,6 @@ import WallpaperIcon from "@mui/icons-material/Wallpaper";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
 
-// Define the list of director suggestions
 const directorSuggestions = [
   "Christopher Nolan",
   "Steven Spielberg",

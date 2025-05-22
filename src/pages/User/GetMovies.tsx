@@ -119,7 +119,6 @@ const GetMovies = () => {
         per_page: 10,
       };
 
-      // Apply fuzzy matching for search results
       if (title) {
         movieArray = movieArray
           .map((movie: Movie) => ({
@@ -171,7 +170,6 @@ const GetMovies = () => {
     }
     try {
       let movieData: MovieResponse;
-      // For short queries, fetch a broader dataset
       if (query.length <= 4) {
         console.log(`Fetching broader dataset for short query: ${query}`);
         movieData = selectedGenre === 'all' 
@@ -184,13 +182,12 @@ const GetMovies = () => {
 
       const movieTitles = movieData?.movies?.map((movie: Movie) => movie.title) || [];
 
-      // Fuzzy matching for suggestions using partial_ratio
       const fuzzyResults = movieTitles
         .map((title) => ({
           title,
           score: partial_ratio(query.toLowerCase(), title.toLowerCase()),
         }))
-        .filter((result) => result.score > 40) // Lowered threshold for suggestions
+        .filter((result) => result.score > 40) 
         .sort((a, b) => b.score - a.score)
         .map((result) => result.title)
         .slice(0, 5);

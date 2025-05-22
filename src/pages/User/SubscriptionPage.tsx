@@ -108,9 +108,9 @@ export default function SubscriptionPage() {
     background: 'rgb(20, 20, 30)',
     cardBg: '#000000',
     cardBgSelected: '#1a1a1a',
-    primary: '#ff0000', // Red for buttons
-    secondary: '#cc0000', // Slightly darker red for hover
-    accent: '#ff3333', // Lighter red for other accents
+    primary: '#ff0000', 
+    secondary: '#cc0000', 
+    accent: '#ff3333', 
     text: '#ffffff',
     textSecondary: 'rgba(255, 255, 255, 0.7)',
     success: '#4caf50',

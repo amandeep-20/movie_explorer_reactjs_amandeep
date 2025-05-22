@@ -24,7 +24,6 @@ const Cancel = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    // Simulate API call delay
     setTimeout(() => {
       setLoading(false);
     }, 1000);

@@ -3,7 +3,6 @@ import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// Create Axios instance for interceptors
 const axiosInstance = axios.create({});
 
 axiosInstance.interceptors.request.use(

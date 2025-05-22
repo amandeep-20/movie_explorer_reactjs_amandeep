@@ -78,7 +78,6 @@ const MoviesDetail: React.FC<MoviesDetailProps> = ({ movie }) => {
 
   const shortDesc = episode.desc.split('.')[0] + '.';
 
-  // const isPremiumLocked = movie.premium && subscriptionPlan !== 'premium';
 
   if (loading) {
     return (
