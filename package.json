@@ -23,6 +23,7 @@
     "axios-cache-interceptor": "^1.8.0",
     "firebase": "^11.6.1",
     "framer-motion": "^12.12.1",
+    "fuzzball": "^2.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",

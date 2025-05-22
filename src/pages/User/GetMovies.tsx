@@ -8,6 +8,7 @@ import MovieItem from '../../components/moviesLayout/MovieItem';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useSubscriptionStatus } from '../../components/hooks/useSubscriptionStatus';
+import { ratio, partial_ratio } from 'fuzzball'; // Import partial_ratio for better partial matching
 
 interface Movie {
   id: number;
@@ -110,13 +111,24 @@ const GetMovies = () => {
 
       console.log('Raw API response:', movieData);
 
-      const movieArray = movieData?.movies || [];
+      let movieArray = movieData?.movies || [];
       const paginationData = movieData?.pagination || {
         current_page: page,
         total_pages: 1,
         total_count: movieArray.length,
         per_page: 10,
       };
+
+      // Apply fuzzy matching for search results
+      if (title) {
+        movieArray = movieArray
+          .map((movie: Movie) => ({
+            ...movie,
+            score: partial_ratio(title.toLowerCase(), movie.title.toLowerCase()),
+          }))
+          .filter((movie: Movie & { score: number }) => movie.score > 40) // Lowered threshold
+          .sort((a, b) => b.score - a.score);
+      }
 
       if (Array.isArray(movieArray) && movieArray.length > 0) {
         const formattedMovies: Episode[] = movieArray.map((movie: Movie) => ({
@@ -141,7 +153,7 @@ const GetMovies = () => {
       } else {
         console.log(`No movies found for ${title ? `title: ${title}` : `genre: ${genre}`}, page: ${page}`);
         setMovies([]);
-        setError('No movies available for this category');
+        setError('No exact matches found. Showing similar movies or try refining your search.');
       }
     } catch (error: any) {
       console.error('Error loading movies:', error.message);
@@ -158,9 +170,32 @@ const GetMovies = () => {
       return;
     }
     try {
-      const movieData: MovieResponse = await searchMoviesByTitle(query, 1, selectedGenre);
+      let movieData: MovieResponse;
+      // For short queries, fetch a broader dataset
+      if (query.length <= 4) {
+        console.log(`Fetching broader dataset for short query: ${query}`);
+        movieData = selectedGenre === 'all' 
+          ? await getAllMovies(1) 
+          : await getMoviesByGenre(selectedGenre, 1);
+      } else {
+        console.log(`Searching suggestions with title: ${query}`);
+        movieData = await searchMoviesByTitle(query, 1, selectedGenre);
+      }
+
       const movieTitles = movieData?.movies?.map((movie: Movie) => movie.title) || [];
-      setSuggestions(movieTitles.slice(0, 5));
+
+      // Fuzzy matching for suggestions using partial_ratio
+      const fuzzyResults = movieTitles
+        .map((title) => ({
+          title,
+          score: partial_ratio(query.toLowerCase(), title.toLowerCase()),
+        }))
+        .filter((result) => result.score > 40) // Lowered threshold for suggestions
+        .sort((a, b) => b.score - a.score)
+        .map((result) => result.title)
+        .slice(0, 5);
+
+      setSuggestions(fuzzyResults);
     } catch (error: any) {
       console.error('Error fetching suggestions:', error.message);
       setSuggestions([]);
@@ -219,7 +254,6 @@ const GetMovies = () => {
     }
   };
 
-  // Immediate search function (no debounce)
   const triggerSearch = (query: string, genre: string, page: number) => {
     setPagination({ ...pagination, current_page: page });
     setSearchParams({ page: page.toString(), genre });
@@ -262,26 +296,26 @@ const GetMovies = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    debouncedSearch(query, selectedGenre, 1); // Debounced search while typing
-    debouncedFetchSuggestions(query); // Fetch suggestions as the user types
+    debouncedSearch(query, selectedGenre, 1);
+    debouncedFetchSuggestions(query);
   };
 
   const handleSuggestionClick = (suggestion: string) => {
     setSearchQuery(suggestion);
-    setSuggestions([]); // Clear suggestions after selection
-    triggerSearch(suggestion, selectedGenre, 1); // Immediate search on suggestion click
+    setSuggestions([]);
+    triggerSearch(suggestion, selectedGenre, 1);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSuggestions([]); // Clear suggestions on submit
-    triggerSearch(searchQuery, selectedGenre, 1); // Immediate search on Enter
+    setSuggestions([]);
+    triggerSearch(searchQuery, selectedGenre, 1);
   };
 
   const toggleSearch = () => {
     setSearchOpen(!searchOpen);
     if (searchOpen) {
-      setSuggestions([]); // Clear suggestions when closing the search bar
+      setSuggestions([]);
     }
   };
 
@@ -476,7 +510,9 @@ const GetMovies = () => {
                         },
                       }}
                     >
-                      <ListItemText primary={suggestion} />
+                      <ListItemText
+                        primary={suggestion}
+                      />
                     </ListItem>
                   ))}
                 </List>
