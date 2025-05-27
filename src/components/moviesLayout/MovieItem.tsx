@@ -229,14 +229,21 @@ const MovieItem: React.FC<MovieItemProps> = ({ episode, index, role, subscriptio
             sx={{
               position: 'absolute',
               top: 10,
-              left: { xs: 0, sm: 0, md: 10, lg: 10 },
+              left: { xs: 0, sm: 0, md: 10, lg: 2 },
               zIndex: 2,
               backgroundColor: 'rgba(0, 0, 0, 0.6)',
               color: '#fff',
               fontWeight: 'bold',
               backdropFilter: 'blur(4px)',
+              maxWidth: '100px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
               '& .MuiChip-label': {
                 px: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               },
             }}
           />

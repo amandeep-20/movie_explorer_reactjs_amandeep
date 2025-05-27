@@ -195,21 +195,25 @@ export default function SubscriptionPage() {
                 key={plan.id}
                 elevation={selectedPlan === plan.id ? 8 : 3}
                 sx={{
-                  position: 'relative',
-                  width: { xs: '100%', md: 'calc(33.33% - 24px)' },
-                  maxWidth: '400px',
-                  transition: 'all 0.3s',
-                  transform: selectedPlan === plan.id ? 'scale(1.02)' : 'scale(1)',
-                  bgcolor: selectedPlan === plan.id ? themeColors.cardBgSelected : themeColors.cardBg,
-                  color: themeColors.text,
-                  borderRadius: 2,
-                  overflow: 'visible',
-                  border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'none',
-                  '&:hover': {
-                    transform: hasActiveSubscription ? 'none' : 'translateY(-5px)',
-                    boxShadow: hasActiveSubscription
-                      ? 'none'
-                      : `0 10px 20px rgba(0,0,0,0.2), 0 0 0 2px ${themeColors.primary}30`,
+                    position: 'relative',
+                    width: { xs: '100%', md: 'calc(33.33% - 24px)' },
+                    maxWidth: '400px',
+                    transition: 'all 0.3s',
+                    transform: selectedPlan === plan.id ? 'scale(1.02)' : 'scale(1)',
+                    bgcolor: selectedPlan === plan.id ? themeColors.cardBgSelected : themeColors.cardBg,
+                    color: themeColors.text,
+                    borderRadius: 2,
+                    overflow: 'visible',
+                    border: selectedPlan === plan.id ? `2px solid ${themeColors.primary}` : 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    minHeight: '500px', 
+                    '&:hover': {
+                      transform: hasActiveSubscription ? 'none' : 'translateY(-5px)',
+                      boxShadow: hasActiveSubscription
+                        ? 'none'
+                        : `0 10px 20px rgba(0,0,0,0.2), 0 0 0 2px ${themeColors.primary}30`,
                   },
                 }}
               >

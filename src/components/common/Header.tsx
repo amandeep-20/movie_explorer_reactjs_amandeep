@@ -12,6 +12,7 @@ import {
   ListItemText, Divider,
   Avatar, useMediaQuery, useTheme,
 } from '@mui/material';
+import {FaCrown} from 'react-icons/fa';
 import MovieIcon from '@mui/icons-material/Movie';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
@@ -202,7 +203,7 @@ const Header = () => {
           }}
         >
           <ListItemIcon sx={{ color: isActive('/user/subscription') ? '#E50914' : '#facc15', minWidth: '40px' }}>
-            <StarIcon />
+            <FaCrown />
           </ListItemIcon>
           <ListItemText
             primary="Premium Subscriber"
@@ -215,7 +216,7 @@ const Header = () => {
             component={RouterLink}
             to="/user/subscription"
             variant="contained"
-            startIcon={<StarIcon sx={{ color: isActive('/user/subscription') ? '#E50914' : '#facc15' }} />}
+            startIcon={<FaCrown color={isActive('/user/subscription') ? '#E50914' : '#facc15'} />}
             aria-label="Premium Subscriber"
             sx={{
               background: isActive('/user/subscription')
@@ -526,7 +527,7 @@ const Header = () => {
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        {role === 'supervisor' ? 'Supervisor' : (email || 'User')}
+                        {role === 'supervisor' && 'Supervisor' }
                         {renderMembershipBadge()}
                       </Typography>
                     </Box>
