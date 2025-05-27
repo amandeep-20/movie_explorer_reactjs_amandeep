@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && error.config.url !== `${BASE_URL}/api/v1/users/sign_in`) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/';
