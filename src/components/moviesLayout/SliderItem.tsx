@@ -101,9 +101,9 @@ class SliderItem extends React.Component<SliderItemProps> {
             alt={`${episode.title} poster`}
             sx={{
               width: { xs: "30%", sm: "20%", md: "100%" },
-              maxWidth: "300px",
+              maxWidth: "250px",
               height: { xs: "80%", sm: "50%", md: "100%" },
-              maxHeight: "400px",
+              maxHeight: "300px",
               borderRadius: 2,
               boxShadow: "0 8px 16px rgba(0,0,0,0.5)",
               transition: "transform 0.3s ease",
@@ -221,26 +221,6 @@ class SliderItem extends React.Component<SliderItemProps> {
                 flexWrap: "wrap",
               }}
             >
-              <Button
-                variant="outlined"
-                startIcon={<InfoOutlinedIcon />}
-                sx={{
-                  borderColor: "rgba(255, 255, 255, 0.7)",
-                  color: "#fff",
-                  "&:hover": {
-                    borderColor: "#fff",
-                    background: "#E50914",
-                    transform: "translateY(-2px)",
-                  },
-                  px: { xs: 2, md: 3 },
-                  py: 1,
-                  fontWeight: 500,
-                  borderRadius: 2,
-                  transition: "all 0.3s ease",
-                }}
-              >
-                More Info
-              </Button>
             </Box>
           </Fade>
 
@@ -258,12 +238,12 @@ class SliderItem extends React.Component<SliderItemProps> {
                 justifyContent: { xs: "center", md: "flex-start" },
               }}
             >
-              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+              {/* <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
                 Subscribe for ₹99/month
-              </Typography>
-              <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
+              </Typography> */}
+              {/* <Typography variant="body2" color="#fff" sx={{ fontWeight: 500 }}>
                 Watch with a Prime membership
-              </Typography>
+              </Typography> */}
             </Box>
           </Fade>
         </Box>
