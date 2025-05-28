@@ -49,7 +49,7 @@ export default function SubscriptionPage() {
       duration: '24 hours of premium access',
     },
     {
-      id: '1_month',
+      id: '7_days',
       name: '7 Day Pass',
       price: '$7.99',
       features: [
@@ -63,7 +63,7 @@ export default function SubscriptionPage() {
       popular: true,
     },
     {
-      id: '3_months',
+      id: '1_months',
       name: '1 Month Premium',
       price: '$19.99',
       features: [
